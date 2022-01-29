@@ -108,16 +108,7 @@ internal static class AppStartup
             options.Conventions.AllowAnonymousToPage("/Login");
             options.Conventions.AllowAnonymousToFolder("/Public");
 
-            
         });
-
-        //services.Configure<RazorViewEngineOptions>(o =>
-        //{
-        //    //o.ViewLocationFormats.Clear();
-        //    // Public partials
-        //    //o.ViewLocationFormats.Add("/Partials/{1}/{0}" + RazorViewEngine.ViewExtension);
-        //    o.ViewLocationFormats.Add("/Partials/Public/{0}" + RazorViewEngine.ViewExtension);
-        //});
 
     }
 
