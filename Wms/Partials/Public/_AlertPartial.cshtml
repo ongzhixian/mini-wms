@@ -1,0 +1,9 @@
+﻿@using Wms.Models
+@{
+    BootstrapAlert? alert = ViewData["Alert"] as BootstrapAlert;
+    if (alert == null)
+    {
+        return;
+    }
+}
+<div class="alert alert-@alert.AlertType" role="alert">@alert.Description</div>

@@ -1,7 +1,18 @@
+using Wms;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+AppStartup.SetupAntiForgery(builder.Services);
+
+AppStartup.SetupSession(builder.Services);
+
+AppStartup.SetupAuthentication(builder.Services);
+
+AppStartup.SetupAuthorization(builder.Services);
+
+AppStartup.SetupHttpClient(builder.Configuration, builder.Services);
+
+AppStartup.SetupServices(builder.Configuration, builder.Services);
 
 var app = builder.Build();
 
@@ -19,9 +30,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-
+app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapRazorPages();
 
