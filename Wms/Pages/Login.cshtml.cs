@@ -42,8 +42,10 @@ public class LoginModel : PageModel
         ClaimsIdentity ci = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         ClaimsPrincipal cp = new ClaimsPrincipal(ci);
 
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme, cp);
-        return RedirectToPage("/Index");
+        return this.SignIn(cp, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        //await HttpContext.SignInAsync(
+        //    CookieAuthenticationDefaults.AuthenticationScheme, cp);
+        //return RedirectToPage("/Index");
     }
 }

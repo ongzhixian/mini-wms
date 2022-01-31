@@ -40,10 +40,13 @@ internal static class AppStartup
                 options.AccessDeniedPath = new PathString("/Account/AccessDenied");
                 options.Cookie.Name = "af1ab955-b2ef-423c-8395-f51b58f09ba3";
                 options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(720);
                 options.LoginPath = new PathString("/Login");
-                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                options.LogoutPath = new PathString("/Logout");
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter; // Default is ?ReturnUrl=%2F
                 options.SlidingExpiration = true;
+
 
             });
     }

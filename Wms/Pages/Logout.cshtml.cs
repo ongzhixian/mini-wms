@@ -7,10 +7,12 @@ namespace Wms.Pages;
 
 public class LogoutModel : PageModel
 {
-    public async Task<IActionResult> OnPost()
+    public IActionResult OnPost()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return RedirectToAction("Index");
-        //return RedirectToPage("/Index");
+        return this.SignOut(new AuthenticationProperties
+        {
+            RedirectUri = "/Index"
+        },
+        CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }
