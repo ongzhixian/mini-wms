@@ -106,6 +106,8 @@ internal static class AppStartup
             //options.Conventions.AuthorizePage("/Contact");
             //options.Conventions.AuthorizeFolder("/Private");
             options.Conventions.AllowAnonymousToPage("/Login");
+            options.Conventions.AllowAnonymousToPage("/Logout");
+            options.Conventions.AllowAnonymousToPage("/Error");
             options.Conventions.AllowAnonymousToFolder("/Public");
 
         });

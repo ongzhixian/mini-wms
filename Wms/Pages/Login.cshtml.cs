@@ -10,7 +10,7 @@ namespace Wms.Pages;
 public class LoginModel : PageModel
 {
     [BindProperty]
-    public string EmailAddress { get; set; }
+    public LoginViewModel Login { get; set; }
 
 
     //public void OnGet()
@@ -36,14 +36,11 @@ public class LoginModel : PageModel
             Description = "OK form."
         };
 
-
         List<Claim> claims = new List<Claim>();
         claims.Add(new Claim(ClaimTypes.Name, "someUsername"));
 
         ClaimsIdentity ci = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         ClaimsPrincipal cp = new ClaimsPrincipal(ci);
-        //SignIn(cp, CookieAuthenticationDefaults.AuthenticationScheme);
-
 
         await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme, cp);
