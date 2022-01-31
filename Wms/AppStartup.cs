@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Wms.Models;
+using Wms.Services;
+using Wms.Services.HttpClients;
 
 namespace Wms;
 
@@ -95,6 +98,8 @@ internal static class AppStartup
 
     internal static void SetupServices(ConfigurationManager configuration, IServiceCollection services)
     {
+        services.Configure<HttpClientSetting>(HttpClientName.Authentication, configuration.GetSection(HttpClientName.Authentication));
+
         services.AddHttpContextAccessor();
 
         services.AddDistributedMemoryCache();
@@ -115,6 +120,17 @@ internal static class AppStartup
 
         });
 
+
+        services.AddScoped<UserService>();
+        services.AddScoped<JwtTokenService>();
+        services.AddScoped<AuthenticationHttpClient>();
+
     }
 
+}
+
+
+public static class HttpClientName
+{
+    public const string Authentication = "HttpClients:Authentication";
 }

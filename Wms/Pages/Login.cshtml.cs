@@ -1,21 +1,26 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 using Wms.Models;
+using Wms.Services;
 
 namespace Wms.Pages;
 
 public class LoginModel : PageModel
 {
     [BindProperty]
-    public LoginViewModel Login { get; set; }
+    public LoginViewModel Login { get; set; } = new LoginViewModel();
 
+    private readonly ILogger<LoginModel> logger;
 
-    //public void OnGet()
-    //{
-    //}
+    private readonly UserService userService;
+
+    public LoginModel(ILogger<LoginModel> logger, UserService userService)
+    {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.userService = userService ?? throw new ArgumentNullException(nameof(userService));
+    }
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -35,17 +40,9 @@ public class LoginModel : PageModel
             AlertType = "secondary",
             Description = "OK form."
         };
-
-        List<Claim> claims = new List<Claim>();
-        claims.Add(new Claim(ClaimTypes.Name, "someUsername"));
-
-        ClaimsIdentity ci = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        ClaimsPrincipal cp = new ClaimsPrincipal(ci);
+        
+        ClaimsPrincipal cp = await userService.GetClaimsPrincipalAsync(Login.Username, Login.Password);
 
         return this.SignIn(cp, CookieAuthenticationDefaults.AuthenticationScheme);
-
-        //await HttpContext.SignInAsync(
-        //    CookieAuthenticationDefaults.AuthenticationScheme, cp);
-        //return RedirectToPage("/Index");
     }
 }
