@@ -26,11 +26,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Public/Privacy">Privacy</a>
                         </li>
+                        @if (true == User?.Identity?.IsAuthenticated)
+                        {
                         <li class="nav-item">
                             <form method="post" class="form-inline" asp-page="/Logout">
                                 <button type="submit" class="nav-link btn btn-link">Logout</button>
                             </form>
                         </li>
+                        }
+                        
                     </ul>
                 </div>
             </div>
@@ -44,8 +48,8 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - Wms - <a asp-area="" asp-page="/Privacy">Privacy</a>
-            <partial name="/Partials/Public/_AuthStatusPartial.cshtml" />
+            &copy; 2022 - Wms - <a asp-area="" asp-page="/Public/Privacy">Privacy</a>
+            @*<partial name="/Partials/Public/_AuthStatusPartial.cshtml" />*@
         </div>
     </footer>
 
