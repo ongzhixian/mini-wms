@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Razor;
+using Mini.Common.Settings;
 using Wms.Models;
 using Wms.Services;
 using Wms.Services.HttpClients;
@@ -98,6 +98,9 @@ internal static class AppStartup
 
     internal static void SetupServices(ConfigurationManager configuration, IServiceCollection services)
     {
+        services.Configure<RsaKeySetting>(RsaKeyName.SigningKey, configuration.GetSection(RsaKeyName.SigningKey));
+        services.Configure<RsaKeySetting>(RsaKeyName.EncryptingKey, configuration.GetSection(RsaKeyName.EncryptingKey));
+        
         services.Configure<HttpClientSetting>(HttpClientName.Authentication, configuration.GetSection(HttpClientName.Authentication));
 
         services.AddHttpContextAccessor();
@@ -111,8 +114,9 @@ internal static class AppStartup
         // Add services to the container.
         services.AddRazorPages(options =>
         {
-            //options.Conventions.AuthorizePage("/Contact");
-            //options.Conventions.AuthorizeFolder("/Private");
+            //options.Conventions.AuthorizePage("/Contact")
+            //options.Conventions.AuthorizeFolder("/Private")
+
             options.Conventions.AllowAnonymousToPage("/Login");
             options.Conventions.AllowAnonymousToPage("/Logout");
             options.Conventions.AllowAnonymousToPage("/Error");
@@ -133,4 +137,14 @@ internal static class AppStartup
 public static class HttpClientName
 {
     public const string Authentication = "HttpClients:Authentication";
+}
+
+
+public static class RsaKeyName
+{
+    // Public key only
+    public const string SigningKey = "RsaKeys:SigningKey";
+
+    // Private key
+    public const string EncryptingKey = "RsaKeys:EncryptingKey"; 
 }

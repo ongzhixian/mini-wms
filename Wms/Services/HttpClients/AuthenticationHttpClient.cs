@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Mini.Common.Models;
 using Mini.Common.Requests;
 using Mini.Common.Responses;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Net.Mime;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Wms.Models;
 
 namespace Wms.Services.HttpClients;
@@ -52,12 +52,15 @@ public class AuthenticationHttpClient
         try
         {
             var responseMessage = await httpClient.PostAsync("/api/authentication", JsonContent.Create(
-                new LoginRequest(username, password)
+                new LoginRequest(username, password, new SecurityCredential
+                {
+                    SecurityAlgorithm = SecurityAlgorithms.RsaOAEP
+                    , SecurityDigest = SecurityAlgorithms.Aes256CbcHmacSha512
+                    , Xml = jwtTokenService.EncryptingKeyXml
+                })
                 , mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json)));
 
             responseMessage.EnsureSuccessStatusCode();
-
-            var res = await responseMessage.Content.ReadAsStringAsync();
 
             var response = await responseMessage.Content.ReadFromJsonAsync<LoginResponse>();
 
@@ -66,6 +69,8 @@ public class AuthenticationHttpClient
             //    LogMessage.RetrievedNullLoginResponse(logger, response, null);
             //    return response;
             //}
+
+
 
             var token = jwtTokenService.Parse(response.Jwt);
 
