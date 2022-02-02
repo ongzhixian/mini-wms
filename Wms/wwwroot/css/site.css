@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.action {
+    margin-bottom: 1em;
+}
+/*.pagination .previous, .pagination .next {
+    width: 100px;
+    text-align: center;
+}*/

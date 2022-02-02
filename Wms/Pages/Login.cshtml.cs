@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -43,6 +44,12 @@ public class LoginModel : PageModel
         
         ClaimsPrincipal cp = await userService.GetClaimsPrincipalAsync(Login.Username, Login.Password);
 
-        return this.SignIn(cp, CookieAuthenticationDefaults.AuthenticationScheme);
+        AuthenticationProperties ap = new AuthenticationProperties
+        {
+            RedirectUri = "/"
+        };
+
+        return this.SignIn(cp, ap,
+            CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }

@@ -1,0 +1,112 @@
+﻿@page
+@model Wms.Pages.Registrar.CustomerModel
+@{
+}
+
+<h2>Customer</h2>
+
+
+
+@*<div class="container">
+    <div class="row">
+    <div class="col">
+    </div>
+    <div class="col"></div>
+    <div class="col">
+    </div>
+
+    </div>
+    </div>
+*@
+@*<nav aria-label="Page navigation example">
+    <ul class="pagination">
+    <li class="page-item"><a class="page-link previous" href="#">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link next" href="#">Next</a></li>
+    </ul>
+    </nav>
+*@
+@*<div class="action">
+    <button type="button" class="btn btn-primary">Create</button>
+
+    </div>*@
+
+@*<div class="action">
+    <button type="button" class="btn btn-primary">Create</button>
+    </div>*@
+
+<div class="container action">
+    <div class="row">
+        <div class="col">
+            @*<button type="button" class="btn btn-primary">
+                <span class="bi bi-plus"></span>
+                Add new</button>
+*@
+            <a class="btn btn-primary" asp-page="/Registrar/Customer/AddNew">
+                <span class="bi bi-plus"></span> 
+                Add new
+            </a>
+
+        </div>
+        <div class="col-3">
+            <form>
+                <div class="col-auto">
+                    <label for="searchFilter" class="visually-hidden">Search</label>
+                    <input type="text" class="form-control" id="searchFilter" placeholder="Search" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>mdo</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>fat</td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td>Larry the Bird</td>
+            <td>Bird</td>
+            <td>twitter</td>
+        </tr>
+    </tbody>
+
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

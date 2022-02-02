@@ -11,4 +11,10 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Mini.Wms">
+      <HintPath>..\..\mini-common\Mini.Wms\bin\Debug\net6.0\Mini.Wms.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
