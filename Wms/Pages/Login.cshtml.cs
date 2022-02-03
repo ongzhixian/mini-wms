@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Mini.Common.Responses;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Wms.Models;
 using Wms.Services;
@@ -17,10 +19,13 @@ public class LoginModel : PageModel
 
     private readonly UserService userService;
 
-    public LoginModel(ILogger<LoginModel> logger, UserService userService)
+    private readonly JwtTokenService jwtTokenService;
+
+    public LoginModel(ILogger<LoginModel> logger, UserService userService, JwtTokenService jwtTokenService)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userService = userService ?? throw new ArgumentNullException(nameof(userService));
+        this.jwtTokenService = jwtTokenService ?? throw new ArgumentNullException(nameof(jwtTokenService));
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -41,15 +46,33 @@ public class LoginModel : PageModel
             AlertType = "secondary",
             Description = "OK form."
         };
-        
-        ClaimsPrincipal cp = await userService.GetClaimsPrincipalAsync(Login.Username, Login.Password);
 
-        AuthenticationProperties ap = new AuthenticationProperties
+        LoginResponse loginResponse = await userService.AuthenticateAsync(Login);
+
+        HttpContext.Session.SetString(SessionKeyName.JWT, loginResponse.Jwt);
+
+        ClaimsPrincipal claimsPrincipal = await jwtTokenService.GetClaimsPrincipalAsync(loginResponse.Jwt);
+
+        //JwtSecurityToken? jwtSecurityToken = jwtTokenService.Parse(loginResponse.Jwt);
+
+        //ClaimsPrincipal cp = await userService.GetClaimsPrincipalAsync(Login.Username, Login.Password);
+
+        //if (HttpContext != null)
+        //{
+        //    HttpContext.Session.SetString("JWT", result.Payload.Jwt);
+
+        //    await HttpContext.SignInAsync(
+        //    CookieAuthenticationDefaults.AuthenticationScheme,
+        //    new ClaimsPrincipal(claimsIdentity),
+        //    authProperties);
+        //}
+
+        AuthenticationProperties authenticationProperties = new AuthenticationProperties
         {
             RedirectUri = "/"
         };
 
-        return this.SignIn(cp, ap,
+        return this.SignIn(claimsPrincipal, authenticationProperties,
             CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }

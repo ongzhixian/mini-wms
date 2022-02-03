@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Mini.Common.Helpers;
 using Mini.Common.Settings;
@@ -13,13 +14,15 @@ namespace Wms.Services;
 public class JwtTokenService
 {
     private readonly JwtSecurityTokenHandler jwtSecurityTokenHandler = new();
-    private readonly RsaKeySetting signingKeySetting;
+    private readonly RsaKeySetting2 signingKeySetting;
     private readonly RsaKeySetting encryptingKeySetting;
     //private readonly RsaKeySetting privateKeySetting;
 
-    public JwtTokenService(IOptionsMonitor<RsaKeySetting> optionsMonitor)
+    //TokenValidationParameters tokenValidationParameters = new TokenValidationParameters();
+
+    public JwtTokenService(IOptionsMonitor<RsaKeySetting> optionsMonitor, IOptionsMonitor<RsaKeySetting2> optionsMonitor2)
     {
-        signingKeySetting = optionsMonitor.Get(RsaKeyName.SigningKey);
+        signingKeySetting = optionsMonitor2.Get(RsaKeyName.SigningKey);
         encryptingKeySetting = optionsMonitor.Get(RsaKeyName.EncryptingKey);
 
         //privateKeySetting = optionsMonitor.Get(RsaKeyName.PrivateKey);
@@ -32,6 +35,14 @@ public class JwtTokenService
         //pvk.FromXmlString(setting2.RsaXml());
 
         //publicKeySetting.GetRsaSecurityKey(false);
+
+        //var signingKey = await SigningKeyAsync();
+
+
+        //tokenValidationParameters.TokenDecryptionKey = DecryptingKey;
+        //tokenValidationParameters.IssuerSigningKey = signingKey;
+        //tokenValidationParameters.ValidateAudience = false;
+        //tokenValidationParameters.ValidateIssuer = false;
     }
 
     //public string PublicKeyXml
@@ -43,63 +54,73 @@ public class JwtTokenService
     //    }
     //}
 
-    public string SigningKeyXml
+    public async Task<string> SigningKeyXmlAsync()
     {
-        get
-        {
-            return signingKeySetting.RsaXml();
-            //return publicKeySetting.GetRsaSecurityKey(false);
-        }
+        return await signingKeySetting.GetRsaSecurityKeyXmlAsync(false);
     }
 
-    public SecurityKey SigningKey
+    public async Task<SecurityKey> SigningKeyAsync()
     {
-        get
-        {
-            return signingKeySetting.GetRsaSecurityKey(false);
-            //return publicKeySetting.GetRsaSecurityKey(false);
-        }
+        return await signingKeySetting.GetRsaSecurityKeyAsync(false);
     }
 
+    /// <summary>
+    /// Returns public key XML for encrypting
+    /// </summary>
     public string EncryptingKeyXml
     {
         get
         {
-            return encryptingKeySetting.RsaXml();
-            //return publicKeySetting.GetRsaSecurityKey(false);
+            return encryptingKeySetting.GetRsaSecurityKeyXml(false);
         }
     }
 
-    public SecurityKey EncryptingKey
+    /// <summary>
+    /// Returns RsaSecurity private key XML for decrypting
+    /// </summary>
+    public SecurityKey DecryptingKey
     {
         get
         {
             return encryptingKeySetting.GetRsaSecurityKey(true);
-            //return publicKeySetting.GetRsaSecurityKey(false);
         }
     }
 
-    public JwtSecurityToken Parse(string jwtString)
+    internal async Task<ClaimsPrincipal> GetClaimsPrincipalAsync(string jwt, string? authenticationScheme = null)
+    {
+        TokenValidationParameters tokenValidationParameters = new TokenValidationParameters();
+        tokenValidationParameters.TokenDecryptionKey = DecryptingKey;
+        tokenValidationParameters.IssuerSigningKey = await SigningKeyAsync();
+        tokenValidationParameters.ValidateAudience = false;
+        tokenValidationParameters.ValidateIssuer = false;
+
+        return new JwtSecurityTokenHandler().ValidateToken(jwt, tokenValidationParameters, out _);
+    }
+
+
+
+    public async Task<JwtSecurityToken> ParseAsync(string jwtString)
     {
         var token = jwtSecurityTokenHandler.ReadJwtToken(jwtString);
-        
+
         //(var scKey, var ecKey) = SecurityKeyHelper.SymmetricSecurityKey("SOME_SALT|SOME_PASSWORD|11970|16180", HashAlgorithmName.SHA256);
 
         //AsymmetricSecurityKey key  = signingKeySetting.GetRsaSecurityKey(false);
 
         TokenValidationParameters prm = new TokenValidationParameters();
-        prm.TokenDecryptionKey = EncryptingKey;
-        prm.IssuerSigningKey = SigningKey;
+        prm.TokenDecryptionKey = DecryptingKey;
+        prm.IssuerSigningKey = await SigningKeyAsync();
         prm.ValidateAudience = false;
         prm.ValidateIssuer = false;
         //prm.ValidateLifetime = false;
-
 
         //JwtSecurityTokenHandler sec = new JwtSecurityTokenHandler();
 
         try
         {
             ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtString, prm, out SecurityToken validatedToken);
+
+            
         }
         catch (Exception ex)
         {

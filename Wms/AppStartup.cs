@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using Mini.Common.Settings;
 using Wms.Models;
 using Wms.Services;
@@ -81,27 +82,71 @@ internal static class AppStartup
 
     internal static void SetupHttpClient(ConfigurationManager configuration, IServiceCollection services)
     {
-        services.AddHttpClient(); // Add IHttpClientFactory
+        // Add IHttpClientFactory
+        services.AddHttpClient();
 
-        services.AddHttpClient("authenticatedClient", (services, http) =>
+        //services.AddHttpClient<AuthenticationHttpClient>((services, http) =>
+        //{
+        //    IHttpContextAccessor httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
+
+        //    IOptionsMonitor<HttpClientSetting> optionsMonitor = services.GetRequiredService<IOptionsMonitor<HttpClientSetting>>();
+
+        //    HttpClientSetting? httpClientSetting = optionsMonitor.Get(HttpClientName.Authentication);
+
+        //    httpClientSetting.EnsureIsValid();
+
+        //    http.BaseAddress = new Uri(httpClientSetting.BaseAddress);
+
+        //    if ((httpContextAccessor.HttpContext != null) && httpContextAccessor.HttpContext.Session.Keys.Contains("JWT"))
+        //    {
+        //        string token = httpContextAccessor.HttpContext.Session.GetString("JWT") ?? throw new NullReferenceException("Session[JWT] is null");
+
+        //        http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        //    }
+        //});
+
+        // Using named -- httpClientFactory.CreateClient(HttpClientName.Authentication)
+
+        //services.AddHttpClient(HttpClientName.Authentication, (services, http) =>
+        //{
+        //    IHttpContextAccessor httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
+
+        //    IOptionsMonitor<HttpClientSetting> optionsMonitor = services.GetRequiredService<IOptionsMonitor<HttpClientSetting>>();
+
+        //    HttpClientSetting? httpClientSetting = optionsMonitor.Get(HttpClientName.Authentication);
+
+        //    httpClientSetting.EnsureIsValid();
+
+        //    http.BaseAddress = new Uri(httpClientSetting.BaseAddress);
+
+        //    if ((httpContextAccessor.HttpContext != null) && httpContextAccessor.HttpContext.Session.Keys.Contains("JWT"))
+        //    {
+        //        string token = httpContextAccessor.HttpContext.Session.GetString("JWT") ?? throw new NullReferenceException("Session[JWT] is null");
+
+        //        http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        //    }
+        //});
+
+        services.AddHttpClient(HttpClientName.BearerHttpClient, (services, http) =>
         {
             IHttpContextAccessor httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
 
             if ((httpContextAccessor.HttpContext != null) && httpContextAccessor.HttpContext.Session.Keys.Contains("JWT"))
             {
                 string token = httpContextAccessor.HttpContext.Session.GetString("JWT") ?? throw new NullReferenceException("Session[JWT] is null");
+
                 http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             }
-
         });
     }
 
     internal static void SetupServices(ConfigurationManager configuration, IServiceCollection services)
     {
-        services.Configure<RsaKeySetting>(RsaKeyName.SigningKey, configuration.GetSection(RsaKeyName.SigningKey));
+        services.Configure<RsaKeySetting2>(RsaKeyName.SigningKey, configuration.GetSection(RsaKeyName.SigningKey));
         services.Configure<RsaKeySetting>(RsaKeyName.EncryptingKey, configuration.GetSection(RsaKeyName.EncryptingKey));
         
-        services.Configure<HttpClientSetting>(HttpClientName.Authentication, configuration.GetSection(HttpClientName.Authentication));
+        services.Configure<HttpClientSetting>(HttpClientName.AuthenticationEndpoint, configuration.GetSection(HttpClientName.AuthenticationEndpoint));
+        services.Configure<HttpClientSetting>(HttpClientName.UserEndpoint, configuration.GetSection(HttpClientName.UserEndpoint));
 
         services.AddHttpContextAccessor();
 
@@ -127,7 +172,11 @@ internal static class AppStartup
 
         services.AddScoped<UserService>();
         services.AddScoped<JwtTokenService>();
-        services.AddScoped<AuthenticationHttpClient>();
+        services.AddScoped<obsAuthenticationHttpClient>();
+        
+        services.AddScoped<AuthenticationEndpoint>();
+        services.AddScoped<UserEndpoint>();
+        services.AddScoped<UserServiceHttpClient>();
 
     }
 
@@ -136,7 +185,10 @@ internal static class AppStartup
 
 public static class HttpClientName
 {
-    public const string Authentication = "HttpClients:Authentication";
+    public const string BearerHttpClient = "BearerHttpClient";
+    public const string AuthenticationEndpoint = "HttpClients:AuthenticationEndpoint";
+    public const string UserEndpoint = "HttpClients:UserEndpoint";
+    
 }
 
 
@@ -147,4 +199,9 @@ public static class RsaKeyName
 
     // Private key
     public const string EncryptingKey = "RsaKeys:EncryptingKey"; 
+}
+
+public static class SessionKeyName
+{
+    public const string JWT = "JWT";
 }
