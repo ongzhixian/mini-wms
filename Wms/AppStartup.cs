@@ -144,7 +144,17 @@ internal static class AppStartup
     {
         services.Configure<RsaKeySetting2>(RsaKeyName.SigningKey, configuration.GetSection(RsaKeyName.SigningKey));
         services.Configure<RsaKeySetting>(RsaKeyName.EncryptingKey, configuration.GetSection(RsaKeyName.EncryptingKey));
-        
+
+        BinderOptions opt = new BinderOptions();
+
+        services.Configure<RsaKeySetting2>(RsaKeyName.SigningKey, a => new RsaKeySetting2
+        {
+            //configuration.GetSection(RsaKeyName.SigningKey).Bind()
+            SourceType =  RsaKeySetting2.RsaKeyDataSource.File,
+            Source = ""
+        }); ;
+
+
         services.Configure<HttpClientSetting>(HttpClientName.AuthenticationEndpoint, configuration.GetSection(HttpClientName.AuthenticationEndpoint));
         services.Configure<HttpClientSetting>(HttpClientName.UserEndpoint, configuration.GetSection(HttpClientName.UserEndpoint));
 
