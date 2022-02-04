@@ -23,6 +23,20 @@ public class UserEndpoint : BearerHttpClient
         this.logger = logger;
     }
 
+    internal async Task<string> GetUserAsync()
+    {
+        var responseMessage = await httpClient.GetAsync("/api/user");
+            //JsonContent.Create(newUser, mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json)));
+
+        responseMessage.EnsureSuccessStatusCode();
+
+        //LoginResponse response = await responseMessage.Content.ReadFromJsonAsync<LoginResponse>();
+
+        var response = await responseMessage.Content.ReadAsStringAsync();
+
+        return response;
+    }
+
     internal async Task<string> AddUserAsync(NewUserViewModel newUser)
     {
         var responseMessage = await httpClient.PostAsync("/api/user",

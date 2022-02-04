@@ -51,7 +51,11 @@ public class LoginModel : PageModel
 
         HttpContext.Session.SetString(SessionKeyName.JWT, loginResponse.Jwt);
 
-        ClaimsPrincipal claimsPrincipal = await jwtTokenService.GetClaimsPrincipalAsync(loginResponse.Jwt);
+        await userService.GetClaimsPrincipalAsync(loginResponse.Jwt);
+
+        //ClaimsPrincipal claimsPrincipal = await jwtTokenService.GetClaimsPrincipalAsync(loginResponse.Jwt);
+
+        //string newJwt = await jwtTokenService.GetSecurityAsync(loginResponse.Jwt);
 
         //JwtSecurityToken? jwtSecurityToken = jwtTokenService.Parse(loginResponse.Jwt);
 
@@ -71,6 +75,9 @@ public class LoginModel : PageModel
         {
             RedirectUri = "/"
         };
+
+        ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal();
+
 
         return this.SignIn(claimsPrincipal, authenticationProperties,
             CookieAuthenticationDefaults.AuthenticationScheme);
