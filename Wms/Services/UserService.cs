@@ -45,6 +45,11 @@ namespace Wms.Services
             return await authenticationEndpoint.PostAsync(login.Username, login.Password);
         }
 
+        internal async Task GetClaimsPrincipalAsync(string jwt)
+        {
+            await userEndpoint.GetUserAsync();
+        }
+
         public async Task AddUserAsync(NewUserViewModel newUser)
         {
             await userEndpoint.AddUserAsync(newUser);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using Mini.Common.Services;
 using Mini.Common.Settings;
 using Wms.Models;
 using Wms.Services;
@@ -142,18 +143,9 @@ internal static class AppStartup
 
     internal static void SetupServices(ConfigurationManager configuration, IServiceCollection services)
     {
-        services.Configure<RsaKeySetting2>(RsaKeyName.SigningKey, configuration.GetSection(RsaKeyName.SigningKey));
+        services.Configure<RsaKeySetting>(RsaKeyName.RecepSigningKey, configuration.GetSection(RsaKeyName.RecepSigningKey));
+        services.Configure<RsaKeySetting>(RsaKeyName.RecepEncryptingKey, configuration.GetSection(RsaKeyName.RecepEncryptingKey));
         services.Configure<RsaKeySetting>(RsaKeyName.EncryptingKey, configuration.GetSection(RsaKeyName.EncryptingKey));
-
-        BinderOptions opt = new BinderOptions();
-
-        services.Configure<RsaKeySetting2>(RsaKeyName.SigningKey, a => new RsaKeySetting2
-        {
-            //configuration.GetSection(RsaKeyName.SigningKey).Bind()
-            SourceType =  RsaKeySetting2.RsaKeyDataSource.File,
-            Source = ""
-        }); ;
-
 
         services.Configure<HttpClientSetting>(HttpClientName.AuthenticationEndpoint, configuration.GetSection(HttpClientName.AuthenticationEndpoint));
         services.Configure<HttpClientSetting>(HttpClientName.UserEndpoint, configuration.GetSection(HttpClientName.UserEndpoint));
@@ -182,7 +174,7 @@ internal static class AppStartup
 
         services.AddScoped<UserService>();
         services.AddScoped<JwtTokenService>();
-        services.AddScoped<obsAuthenticationHttpClient>();
+        services.AddScoped<PkedService>();
         
         services.AddScoped<AuthenticationEndpoint>();
         services.AddScoped<UserEndpoint>();
@@ -198,14 +190,13 @@ public static class HttpClientName
     public const string BearerHttpClient = "BearerHttpClient";
     public const string AuthenticationEndpoint = "HttpClients:AuthenticationEndpoint";
     public const string UserEndpoint = "HttpClients:UserEndpoint";
-    
 }
-
 
 public static class RsaKeyName
 {
     // Public key only
-    public const string SigningKey = "RsaKeys:SigningKey";
+    public const string RecepSigningKey = "RsaKeys:RecepSigningPublicKey";
+    public const string RecepEncryptingKey = "RsaKeys:RecepEncryptingPublicKey";
 
     // Private key
     public const string EncryptingKey = "RsaKeys:EncryptingKey"; 
