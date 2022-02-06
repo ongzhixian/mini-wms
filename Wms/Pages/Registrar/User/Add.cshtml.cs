@@ -17,16 +17,11 @@ public class AddModel : PageModel
         this.userService = userService ?? throw new Exception(nameof(userService));
     }
 
-    public void OnGet()
-    {
-    }
-
-    public void OnPost()
+    public async Task OnPostAsync()
     {
         if (ModelState.IsValid)
         {
-            // Post to backend
-            userService.AddUserAsync(NewUser);
+            await userService.AddUserAsync(NewUser);
         }
     }
 }

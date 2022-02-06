@@ -30,32 +30,30 @@ public class LoginModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        //if (!ModelState.IsValid)
-        //{
-        //    ViewData["Alert"] = new BootstrapAlert()
-        //    {
-        //        AlertType = "danger",
-        //        Description = "Invalid form."
-        //    };
-        //    return Page();
-        //}
+        if (!ModelState.IsValid)
+        {
+            ViewData["Alert"] = new BootstrapAlert()
+            {
+                AlertType = "danger",
+                Description = "Invalid form."
+            };
+            return Page();
+        }
+
+#pragma warning disable S125 // Sections of code should not be commented out
 
         // Simulate valid authentication
-        ViewData["Message"] = new BootstrapAlert()
-        {
-            AlertType = "secondary",
-            Description = "OK form."
-        };
+        //ViewData["Message"] = new BootstrapAlert()
+        //{
+        //    AlertType = "secondary",
+        //    Description = "OK form."
+        //};
 
-        LoginResponse loginResponse = await userService.AuthenticateAsync(Login);
+        //HttpContext.Session.SetString(SessionKeyName.JWT, loginResponse.Jwt);
 
-        HttpContext.Session.SetString(SessionKeyName.JWT, loginResponse.Jwt);
-
-        await userService.GetClaimsPrincipalAsync(loginResponse.Jwt);
+        //await userService.GetClaimsPrincipalAsync(loginResponse.Jwt);
 
         //ClaimsPrincipal claimsPrincipal = await jwtTokenService.GetClaimsPrincipalAsync(loginResponse.Jwt);
-
-        //string newJwt = await jwtTokenService.GetSecurityAsync(loginResponse.Jwt);
 
         //JwtSecurityToken? jwtSecurityToken = jwtTokenService.Parse(loginResponse.Jwt);
 
@@ -71,15 +69,33 @@ public class LoginModel : PageModel
         //    authProperties);
         //}
 
-        AuthenticationProperties authenticationProperties = new AuthenticationProperties
+#pragma warning restore S125 // Sections of code should not be commented out
+
+        LoginResponse loginResponse = await userService.AuthenticateAsync(Login);
+
+
+        var (claimsPrincipal, newJwt) = await jwtTokenService.GetSecurityAsync(loginResponse.Jwt);
+
+        if (claimsPrincipal?.Identity?.IsAuthenticated == true)
         {
-            RedirectUri = "/"
+            HttpContext.Session.SetString(SessionKeyName.JWT, newJwt);
+
+            AuthenticationProperties authenticationProperties = new()
+            {
+                RedirectUri = "/"
+            };
+
+            return SignIn(claimsPrincipal, authenticationProperties,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+        }
+
+        ViewData["Message"] = new BootstrapAlert()
+        {
+            AlertType = "danger",
+            Description = "Invalid credentials."
         };
 
-        ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal();
-
-
-        return this.SignIn(claimsPrincipal, authenticationProperties,
-            CookieAuthenticationDefaults.AuthenticationScheme);
+        return new OkResult();
     }
 }

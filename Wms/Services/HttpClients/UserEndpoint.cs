@@ -10,8 +10,6 @@ public class UserEndpoint : BearerHttpClient
 {
     private readonly ILogger<UserEndpoint> logger;
 
-    private readonly JwtTokenService jwtTokenService;
-
     public UserEndpoint(
         ILogger<UserEndpoint> logger
         , IHttpClientFactory httpClientFactory
@@ -26,11 +24,8 @@ public class UserEndpoint : BearerHttpClient
     internal async Task<string> GetUserAsync()
     {
         var responseMessage = await httpClient.GetAsync("/api/user");
-            //JsonContent.Create(newUser, mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json)));
 
         responseMessage.EnsureSuccessStatusCode();
-
-        //LoginResponse response = await responseMessage.Content.ReadFromJsonAsync<LoginResponse>();
 
         var response = await responseMessage.Content.ReadAsStringAsync();
 
@@ -44,7 +39,7 @@ public class UserEndpoint : BearerHttpClient
 
         responseMessage.EnsureSuccessStatusCode();
 
-        //LoginResponse response = await responseMessage.Content.ReadFromJsonAsync<LoginResponse>();
+        // LoginResponse response = await responseMessage.Content.ReadFromJsonAsync<LoginResponse>()
 
         var response = await responseMessage.Content.ReadAsStringAsync();
 

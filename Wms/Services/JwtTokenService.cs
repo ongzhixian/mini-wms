@@ -16,43 +16,12 @@ public class JwtTokenService
     private readonly JwtSecurityTokenHandler jwtSecurityTokenHandler = new();
     private readonly RsaKeySetting signingKeySetting;
     private readonly RsaKeySetting encryptingKeySetting;
-    //private readonly RsaKeySetting privateKeySetting;
-
-    //TokenValidationParameters tokenValidationParameters = new TokenValidationParameters();
 
     public JwtTokenService(IOptionsMonitor<RsaKeySetting> optionsMonitor)
     {
         signingKeySetting = optionsMonitor.Get(RsaKeyName.RecepSigningKey);
         encryptingKeySetting = optionsMonitor.Get(RsaKeyName.EncryptingKey);
-
-        //privateKeySetting = optionsMonitor.Get(RsaKeyName.PrivateKey);
-
-        //RSA pbk = RSA.Create();
-        //RSA pvk = RSA.Create();
-
-        ////Environment.GetEnvironmentVariable(setting2.Source);
-        //pbk.FromXmlString(setting.RsaXml());
-        //pvk.FromXmlString(setting2.RsaXml());
-
-        //publicKeySetting.GetRsaSecurityKey(false);
-
-        //var signingKey = await SigningKeyAsync();
-
-
-        //tokenValidationParameters.TokenDecryptionKey = DecryptingKey;
-        //tokenValidationParameters.IssuerSigningKey = signingKey;
-        //tokenValidationParameters.ValidateAudience = false;
-        //tokenValidationParameters.ValidateIssuer = false;
     }
-
-    //public string PublicKeyXml
-    //{
-    //    get
-    //    {
-    //        return signingKeySetting.SourceXml();
-    //        //return publicKeySetting.GetRsaSecurityKey(false);
-    //    }
-    //}
 
     public async Task<string> SigningKeyXmlAsync()
     {
@@ -80,32 +49,30 @@ public class JwtTokenService
         return await encryptingKeySetting.GetRsaSecurityKeyAsync(true);
     }
 
-    internal async Task<ClaimsPrincipal> GetClaimsPrincipalAsync(string jwt, string? authenticationScheme = null)
+    internal async Task<(ClaimsPrincipal, string)> GetSecurityAsync(string jwt)
     {
-        TokenValidationParameters tokenValidationParameters = new TokenValidationParameters();
+        TokenValidationParameters tokenValidationParameters = new();
         tokenValidationParameters.TokenDecryptionKey = await DecryptingKeyAsync();
         tokenValidationParameters.IssuerSigningKey = await SigningKeyAsync();
-        tokenValidationParameters.ValidateAudience = false;
-        tokenValidationParameters.ValidateIssuer = false;
+        tokenValidationParameters.ValidAudience = "mini-console-app";
+        tokenValidationParameters.ValidIssuer = "https://localhost:5001"; // https://mini-recep.azurewebsites.net
+        //tokenValidationParameters.ValidateAudience = false
+        //tokenValidationParameters.ValidateIssuer = false
 
-        return new JwtSecurityTokenHandler().ValidateToken(jwt, tokenValidationParameters, out _);
-    }
+        ClaimsPrincipal claimsPrincipal = jwtSecurityTokenHandler.ValidateToken(jwt, 
+            tokenValidationParameters, out SecurityToken securityToken);
 
-    internal async Task<string> GetSecurityAsync(string jwt, string? authenticationScheme = null)
-    {
-        TokenValidationParameters tokenValidationParameters = new TokenValidationParameters();
-        tokenValidationParameters.TokenDecryptionKey = await DecryptingKeyAsync();
-        tokenValidationParameters.IssuerSigningKey = await SigningKeyAsync();
-        tokenValidationParameters.ValidateAudience = false;
-        tokenValidationParameters.ValidateIssuer = false;
+        if (securityToken is JwtSecurityToken securedToken)
+        {
+            JwtSecurityToken signedToken = securedToken.InnerToken;
 
-        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            return (claimsPrincipal, signedToken.RawData);
+        }
 
-        ClaimsPrincipal cp = handler.ValidateToken(jwt, tokenValidationParameters, out SecurityToken securityToken);
-
+        return (new ClaimsPrincipal(), string.Empty);
 
 
-        string newBearer = handler.WriteToken(securityToken);
+#pragma warning disable S125 // Sections of code should not be commented out
 
         //jwtSecurityToken = jwtSecurityTokenHandler.CreateJwtSecurityToken(
         //    issuer: jwtSetting.Issuer,
@@ -124,38 +91,49 @@ public class JwtTokenService
         //        , securityCredential.SecurityDigest)
         //);
 
-        return newBearer;
+#pragma warning restore S125 // Sections of code should not be commented out
+
     }
 
-    public async Task<JwtSecurityToken> ParseAsync(string jwtString)
-    {
-        var token = jwtSecurityTokenHandler.ReadJwtToken(jwtString);
 
-        //(var scKey, var ecKey) = SecurityKeyHelper.SymmetricSecurityKey("SOME_SALT|SOME_PASSWORD|11970|16180", HashAlgorithmName.SHA256);
+#pragma warning disable S125 // Sections of code should not be commented out
 
-        //AsymmetricSecurityKey key  = signingKeySetting.GetRsaSecurityKey(false);
+    //public async Task<JwtSecurityToken> ParseAsync(string jwtString)
+    //{
+    //    var token = jwtSecurityTokenHandler.ReadJwtToken(jwtString);
+    //    //(var scKey, var ecKey) = SecurityKeyHelper.SymmetricSecurityKey("SOME_SALT|SOME_PASSWORD|11970|16180", HashAlgorithmName.SHA256);
+    //    //AsymmetricSecurityKey key  = signingKeySetting.GetRsaSecurityKey(false);
 
-        TokenValidationParameters prm = new TokenValidationParameters();
-        prm.TokenDecryptionKey = await DecryptingKeyAsync();
-        prm.IssuerSigningKey = await SigningKeyAsync();
-        prm.ValidateAudience = false;
-        prm.ValidateIssuer = false;
-        //prm.ValidateLifetime = false;
+    //    TokenValidationParameters prm = new TokenValidationParameters();
+    //    prm.TokenDecryptionKey = await DecryptingKeyAsync();
+    //    prm.IssuerSigningKey = await SigningKeyAsync();
+    //    prm.ValidateAudience = false;
+    //    prm.ValidateIssuer = false;
+    //    //prm.ValidateLifetime = false;
 
-        //JwtSecurityTokenHandler sec = new JwtSecurityTokenHandler();
+    //    //JwtSecurityTokenHandler sec = new JwtSecurityTokenHandler();
+    //    try
+    //    {
+    //        ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtString, prm, out SecurityToken validatedToken);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw;
+    //    }
+    //    return token;
+    //}
 
-        try
-        {
-            ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtString, prm, out SecurityToken validatedToken);
+    //internal async Task<ClaimsPrincipal> GetClaimsPrincipalAsync(string jwt, string? authenticationScheme = null)
+    //{
+    //    TokenValidationParameters tokenValidationParameters = new TokenValidationParameters();
+    //    tokenValidationParameters.TokenDecryptionKey = await DecryptingKeyAsync();
+    //    tokenValidationParameters.IssuerSigningKey = await SigningKeyAsync();
+    //    tokenValidationParameters.ValidateAudience = false;
+    //    tokenValidationParameters.ValidateIssuer = false;
+    //    return new JwtSecurityTokenHandler().ValidateToken(jwt, tokenValidationParameters, out _);
+    //}
 
-            
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-
-        return token;
-    }
+#pragma warning restore S125 // Sections of code should not be commented out
 
 }
+

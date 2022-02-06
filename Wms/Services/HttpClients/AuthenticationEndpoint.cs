@@ -69,26 +69,27 @@ public class AuthenticationEndpoint : BearerHttpClient
         //    }), 
         //    RsaKeyName.RecepEncryptingKey);
 
-        EncryptedMessage encryptedMessage = await pkedService.EncryptAsync<LoginRequest>(
-            new LoginRequest(username, password), RsaKeyName.RecepEncryptingKey);
+        //EncryptedMessage encryptedMessage = await pkedService.EncryptAsync<LoginRequest>(
+        //    new LoginRequest(username, password), RsaKeyName.RecepEncryptingKey);
 
+        //var responseMessage = await httpClient.PostAsync("/api/authentication", 
+        //    JsonContent.Create(encryptedMessage, mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json)));
 
-        var responseMessage = await httpClient.PostAsync("/api/authentication", 
-            JsonContent.Create(encryptedMessage, mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json)));
+        EncryptedMessage encryptedMessage2 = await pkedService.EncryptAsync<LoginRequest>(
+            new LoginRequest(username, password, new SecurityCredential
+            {
+                SecurityAlgorithm = SecurityAlgorithms.RsaOAEP
+                , SecurityDigest = SecurityAlgorithms.Aes256CbcHmacSha512
+                , Xml = await jwtTokenService.EncryptingKeyXmlAsync()
+            }), RsaKeyName.RecepEncryptingKey);
 
-        //var responseMessage = await httpClient.PostAsync("/api/authentication",
-        //    JsonContent.Create(
-        //        new LoginRequest(username, password, new SecurityCredential
-        //        {
-        //            SecurityAlgorithm = SecurityAlgorithms.RsaOAEP
-        //            , SecurityDigest = SecurityAlgorithms.Aes256CbcHmacSha512
-        //            , Xml = await jwtTokenService.EncryptingKeyXmlAsync()
-        //        })
-        //        , mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json)));
+        var responseMessage2 = await httpClient.PostAsync("/api/authentication",
+            JsonContent.Create(encryptedMessage2, mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json)));
 
-        responseMessage.EnsureSuccessStatusCode();
+        responseMessage2.EnsureSuccessStatusCode();
 
-        LoginResponse response = await responseMessage.Content.ReadFromJsonAsync<LoginResponse>();
+        //LoginResponse response = await responseMessage.Content.ReadFromJsonAsync<LoginResponse>();
+        LoginResponse response = await responseMessage2.Content.ReadFromJsonAsync<LoginResponse>();
 
         return response;
     }
