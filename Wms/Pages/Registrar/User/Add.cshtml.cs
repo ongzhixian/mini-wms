@@ -21,6 +21,8 @@ public class AddModel : PageModel
     {
         if (ModelState.IsValid)
         {
+            //Mini.Wms.MongoDbImplementation.Models.User userAccount = new Mini.Wms.MongoDbImplementation.Models.User();
+            
             await userService.AddUserAsync(NewUser);
         }
     }

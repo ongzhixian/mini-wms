@@ -1,4 +1,5 @@
 ﻿using Mini.Common.Responses;
+using Mini.Wms.DomainMessages;
 using Wms.Models;
 using Wms.Services.HttpClients;
 
@@ -50,6 +51,11 @@ namespace Wms.Services
         public async Task AddUserAsync(NewUserViewModel newUser)
         {
             await userEndpoint.AddUserAsync(newUser);
+        }
+
+        public async Task<IEnumerable<UserRecord>> GetAllUsersAsync()
+        {
+            return await userEndpoint.GetAllUsers();
         }
     }
 }

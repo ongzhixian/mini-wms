@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Mini.Common" Version="1.0.51" />
+    <PackageReference Include="Mini.Wms.DomainMessages" Version="1.0.7" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
   </ItemGroup>
 
