@@ -189,7 +189,10 @@ public static class HttpClientName
 {
     public const string BearerHttpClient = "BearerHttpClient";
     public const string AuthenticationEndpoint = "HttpClients:AuthenticationEndpoint";
+    public const string RefreshTokenEndpoint = "HttpClients:RefreshTokenEndpoint";
     public const string UserEndpoint = "HttpClients:UserEndpoint";
+    
+    
 }
 
 public static class RsaKeyName

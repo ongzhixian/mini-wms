@@ -86,3 +86,12 @@
 //        Http = 3
 //    }
 //}
+
+namespace Mini.Common.Requests
+{
+    public readonly record struct RefreshTokenRequest
+    {
+
+    }
+
+}

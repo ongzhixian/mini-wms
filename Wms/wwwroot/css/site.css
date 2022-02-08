@@ -1,20 +1,20 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .action {
@@ -24,3 +24,17 @@ body {
     width: 100px;
     text-align: center;
 }*/
+
+.caption {
+    display: flex;
+    justify-content: space-between;
+}
+
+    .caption h3 {
+        align-self: center;
+        margin: 0;
+    }
+
+    .caption .records-info {
+        align-self: center;
+    }

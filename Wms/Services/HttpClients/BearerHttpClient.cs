@@ -27,5 +27,10 @@ public abstract class BearerHttpClient
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
+        else
+        {
+            // How to request for a new Jwt?
+            
+        }
     }
 }
