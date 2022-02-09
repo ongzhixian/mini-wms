@@ -82,7 +82,7 @@ public class LoginModel : PageModel
 
             AuthenticationProperties authenticationProperties = new()
             {
-                RedirectUri = "/"
+                RedirectUri = Request.Query["ReturnUrl"].Count == 0 ? "/" : Request.Query["ReturnUrl"].ToString()
             };
 
             return SignIn(claimsPrincipal, authenticationProperties,

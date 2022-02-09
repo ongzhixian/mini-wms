@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Mini.Common.Models;
 using Mini.Wms.DomainMessages;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -35,27 +36,7 @@ public class UserEndpoint : BearerHttpClient
 
     internal async Task<string> AddUserAsync(NewUserViewModel newUser)
     {
-        //Mini.Wms.DomainMessages.NewUser message = new Mini.Wms.DomainMessages.NewUser(newUser.Username, newUser.FirstName, newUser.LastName);
-        //{
-        //    FirstName = newUser.FirstName,
-        //    LastName = newUser.LastName,
-        //    Username = newUser.Username
-        //};
-
-        //Mini.Wms.DomainMessages.AddUser message2 = newUser with
-        //{
-
-        //};
-
-        //NewUserDomainModel model = newUser with
-        //{
-        //};
-        NewUserMessage message = new NewUserMessage(newUser.Username, newUser.FirstName, newUser.LastName);
-        //{
-        //    Username = newUser.Username,
-        //    FirstName = newUser.FirstName,
-        //    LastName = newUser.LastName
-        //};
+        NewUserMessage message = new(newUser.Username, newUser.FirstName, newUser.LastName);
 
         var responseMessage = await httpClient.PostAsync("/api/user",
             JsonContent.Create(message, mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json)));
@@ -81,5 +62,15 @@ public class UserEndpoint : BearerHttpClient
             return response;
 
         return new List<UserRecord>();
+    }
+
+    internal async Task<PagedData<UserRecord>> GetAllUsers(PagedDataOptions pagedData)
+    {
+        var responseMessage = await httpClient.GetAsync("/api/user" + pagedData.ToQueryString());
+
+        responseMessage.EnsureSuccessStatusCode();
+
+        return await responseMessage.Content.ReadFromJsonAsync<PagedData<UserRecord>>();
+
     }
 }

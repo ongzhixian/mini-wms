@@ -34,17 +34,21 @@
                 <th scope="col">Last name
                 <button class="btn btn-link" type="button"><span class="bi-sort-down-alt"></span></button>
                 </th>*@
-            @foreach (var item in Model.TableColumns)
+            @foreach (var item in Model.PagedData.DataFieldList)
             {
                 <th scope="col">
-                    @item.HeaderText
-                    @if (item.SortAsc)
+                    
+                    @if (item.SortAscending)
                     {
-                        <button class="btn btn-link" type="button"><span class="bi-sort-down-alt"></span></button>
+                        <button class="btn btn-link" type="button">
+                            @item.Name <span class="bi-sort-down-alt"></span>
+                        </button>
                     }
                     else
                     {
-                        <button class="btn btn-link" type="button"><span class="bi-sort-up-alt"></span></button>
+                        <button class="btn btn-link" type="button">
+                            @item.Name <span class="bi-sort-up-alt"></span>
+                        </button>
                     }
 
                 </th>
@@ -84,7 +88,7 @@
 
 <a asp-page="/Registrar/User/Add" class="btn btn-primary">Add user</a>
 
-<form>
+@*<form>
     <button type="submit" class="btn btn-primary"><span class="bi-search"></span></button>
     <label for="searchFilter" class="visually-hidden">Search</label>
     <input type="text" class="form-control" id="searchFilter" placeholder="Username pattern" />
@@ -92,7 +96,7 @@
     <input type="text" class="form-control" id="searchFilter" placeholder="First name pattern" />
     <label for="searchFilter" class="visually-hidden">Search</label>
     <input type="text" class="form-control" id="searchFilter" placeholder="Last name pattern" />
-</form>
+</form>*@
 
 @*@section Scripts
     {

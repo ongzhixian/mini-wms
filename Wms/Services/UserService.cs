@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Mini.Common.Models;
 using Mini.Common.Responses;
 using Mini.Wms.DomainMessages;
 using System.Linq.Expressions;
@@ -23,6 +24,8 @@ namespace Wms.Services
             this.authenticationEndpoint = authenticationEndpoint ?? throw new ArgumentNullException(nameof(authenticationEndpoint));
             this.userEndpoint = userEndpoint ?? throw new ArgumentNullException(nameof(userEndpoint));
         }
+
+
 
 
 
@@ -63,43 +66,44 @@ namespace Wms.Services
             return await userEndpoint.GetAllUsers();
         }
 
-        internal async Task<IEnumerable<UserRecord>> GetAllUsersAsync(object filter, object sortOrder, uint page = 1, uint pageSize = 12)
+
+
+        internal async Task<PagedData<UserRecord>> GetAllUsersAsync(PagedDataOptions pagedData)
         {
-            IEnumerable<UserRecord>? res = await userEndpoint.GetAllUsers();
-
-            res = res.Where(r => r.Username == "asd");
-
-            res = res.OrderBy(r => r.LastName);
-
-            return res;
+            return await userEndpoint.GetAllUsers(pagedData);
         }
 
-        public static IQueryable<T> OrderByDynamic<T>(this IQueryable<T> query, string sortColumn, bool descending)
-        {
-            // Dynamically creates a call like this: query.OrderBy(p =&gt; p.SortColumn)
-            var parameter = Expression.Parameter(typeof(T), "p");
+#pragma warning disable S125 // Sections of code should not be commented out
+        //internal async Task<IEnumerable<UserRecord>> GetAllUsersAsync(object filter, object sortOrder, uint page = 1, uint pageSize = 12)
+        //{
+        //    IEnumerable<UserRecord>? res = await userEndpoint.GetAllUsers();
+        //    res = res.Where(r => r.Username == "asd");
+        //    res = res.OrderBy(r => r.LastName);
+        //    return res;
+        //}
 
-            string command = "OrderBy";
+        //public static IQueryable<T> OrderByDynamic<T>(this IQueryable<T> query, string sortColumn, bool descending)
+        //{
+        //    // Dynamically creates a call like this: query.OrderBy(p =&gt; p.SortColumn)
+        //    var parameter = Expression.Parameter(typeof(T), "p");
+        //    string command = "OrderBy";
+        //    if (descending)
+        //    {
+        //        command = "OrderByDescending";
+        //    }
+        //    Expression resultExpression = null;
+        //    var property = typeof(T).GetProperty(sortColumn);
+        //    // this is the part p.SortColumn
+        //    var propertyAccess = Expression.MakeMemberAccess(parameter, property);
+        //    // this is the part p =&gt; p.SortColumn
+        //    var orderByExpression = Expression.Lambda(propertyAccess, parameter);
+        //    // finally, call the "OrderBy" / "OrderByDescending" method with the order by lamba expression
+        //    resultExpression = Expression.Call(typeof(Queryable), command, new Type[] { typeof(T), property.PropertyType },
+        //       query.Expression, Expression.Quote(orderByExpression));
+        //    return query.Provider.CreateQuery<T>(resultExpression);
+        //}
+#pragma warning restore S125 // Sections of code should not be commented out
 
-            if (descending)
-            {
-                command = "OrderByDescending";
-            }
-
-            Expression resultExpression = null;
-
-            var property = typeof(T).GetProperty(sortColumn);
-            // this is the part p.SortColumn
-            var propertyAccess = Expression.MakeMemberAccess(parameter, property);
-
-            // this is the part p =&gt; p.SortColumn
-            var orderByExpression = Expression.Lambda(propertyAccess, parameter);
-
-            // finally, call the "OrderBy" / "OrderByDescending" method with the order by lamba expression
-            resultExpression = Expression.Call(typeof(Queryable), command, new Type[] { typeof(T), property.PropertyType },
-               query.Expression, Expression.Quote(orderByExpression));
-
-            return query.Provider.CreateQuery<T>(resultExpression);
-        }
     }
+
 }

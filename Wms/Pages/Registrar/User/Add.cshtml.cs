@@ -22,7 +22,7 @@ public class AddModel : PageModel
     {
         if (ModelState.IsValid)
         {
-            //Mini.Wms.MongoDbImplementation.Models.User userAccount = new Mini.Wms.MongoDbImplementation.Models.User();
+            //Mini.Wms.MongoDbImplementation.Models.User userAccount = new Mini.Wms.MongoDbImplementation.Models.User()
 
             try
             {
