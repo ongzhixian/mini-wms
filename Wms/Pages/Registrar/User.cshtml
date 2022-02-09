@@ -5,10 +5,6 @@
     int lineItemCount = 1;
 }
 
-&nbsp;
-
-
-
 <table class="table table-striped">
     <thead>
         <tr>
@@ -40,9 +36,16 @@
                     
                     @if (item.SortAscending)
                     {
-                        <button class="btn btn-link" type="button">
+                        <a class="" 
+                        asp-route-pg="@Model.PagedData.Page" asp-route-ps="@Model.PagedData.PageSize"
+                        asp-route-sort="@item.Name" asp-route-ascending="@item.SortAscending">
                             @item.Name <span class="bi-sort-down-alt"></span>
-                        </button>
+                        </a>
+
+                        @*<button class="btn btn-link" type="button">
+
+                            @item.Name <span class="bi-sort-down-alt"></span>
+                        </button>*@
                     }
                     else
                     {
@@ -76,8 +79,9 @@
             </a>
         </li>
         <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" asp-page="/Registrar/User" asp-route-pg="2" asp-route-ps="5">2</a></li>
+        <li class="page-item"><a class="page-link" asp-page="/Registrar/User" asp-route-pg="1" asp-route-ps="8">3</a></li>
+        
         <li class="page-item">
             <a class="page-link" href="#" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
@@ -97,6 +101,8 @@
     <label for="searchFilter" class="visually-hidden">Search</label>
     <input type="text" class="form-control" id="searchFilter" placeholder="Last name pattern" />
 </form>*@
+
+<input type="hidden" value="@Model" />
 
 @*@section Scripts
     {
