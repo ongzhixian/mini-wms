@@ -16,7 +16,7 @@ public class UserServiceHttpClient
     
     private readonly HttpClient httpClient;
 
-    private readonly JwtTokenService jwtTokenService;
+    private readonly IJwtTokenService jwtTokenService;
 
     private static class LogMessage
     {
@@ -33,7 +33,7 @@ public class UserServiceHttpClient
         ILogger<UserServiceHttpClient> logger
         , IHttpClientFactory httpClientFactory
         , IOptionsMonitor<HttpClientSetting> optionsMonitor
-        , JwtTokenService jwtTokenService
+        , IJwtTokenService jwtTokenService
         )
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

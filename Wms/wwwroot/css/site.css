@@ -38,3 +38,19 @@ body {
     .caption .records-info {
         align-self: center;
     }
+
+.interactive {
+    cursor: pointer;
+}
+
+.inline {
+    display: inline-flex;
+    width: auto;
+    margin: 0;
+}
+
+nav.pager {
+    margin-bottom: 0.678em;
+    display: flex;
+    justify-content: space-between;
+}

@@ -70,7 +70,44 @@ public class UserEndpoint : BearerHttpClient
 
         responseMessage.EnsureSuccessStatusCode();
 
-        return await responseMessage.Content.ReadFromJsonAsync<PagedData<UserRecord>>();
+        var x = await responseMessage.Content.ReadAsStringAsync();
+
+        //PagedData<UserRecord> a = new PagedData<UserRecord>()
+        //{
+        //    Page = 1,
+        //    PageSize = 12,
+        //    TotalRecordCount = 0,
+        //    Data = new List<UserRecord>()
+        //    {
+        //        new UserRecord()
+        //        {
+        //            FirstName = "someFirstName",
+        //            LastName = "someLastName",
+        //            Username = "someUsername"
+        //        }
+        //    }
+        //};
+
+        //string j = "{\"TotalRecordCount\":11,\"Data\":[{\"Username\":\"apple\",\"FirstName\":\"apple\",\"LastName\":\"comp\"},{\"Username\":\"apple2\",\"FirstName\":\"apple\",\"LastName\":\"comp\"},{\"Username\":\"apple3\",\"FirstName\":\"asd\",\"LastName\":\"asd\"},{\"Username\":\"apple4\",\"FirstName\":\"asd\",\"LastName\":\"asd\"},{\"Username\":\"apple5\",\"FirstName\":\"asd\",\"LastName\":\"asd\"}],\"Page\":1,\"PageSize\":5}";
+        //var resx1 = System.Text.Json.JsonSerializer.Deserialize<PagedData<UserRecord>>(j);
+
+        //System.Text.Json.JsonSerializerOptions opt = new System.Text.Json.JsonSerializerOptions();
+        //opt.PropertyNameCaseInsensitive = true;
+        //opt.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+
+        //var res1 = System.Text.Json.JsonSerializer.Deserialize<PagedData<UserRecord>>(s);
+        
+
+        try
+        {
+            //var r = await responseMessage.Content.ReadFromJsonAsync<List<UserRecord>>(opt);
+            //var r = await responseMessage.Content.ReadFromJsonAsync<PagedData<UserRecord>>()
+            return await responseMessage.Content.ReadFromJsonAsync<PagedData<UserRecord>>();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
 
     }
 }

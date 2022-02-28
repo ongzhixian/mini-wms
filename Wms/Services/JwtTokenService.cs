@@ -11,7 +11,16 @@ using Wms.Models;
 
 namespace Wms.Services;
 
-public class JwtTokenService
+public interface IJwtTokenService
+{
+    Task<SecurityKey> DecryptingKeyAsync();
+    Task<string> EncryptingKeyXmlAsync();
+    Task<SecurityKey> SigningKeyAsync();
+    Task<string> SigningKeyXmlAsync();
+    Task<(ClaimsPrincipal, string)> GetSecurityAsync(string jwt);
+}
+
+public class JwtTokenService : IJwtTokenService
 {
     private readonly JwtSecurityTokenHandler jwtSecurityTokenHandler = new();
     private readonly RsaKeySetting signingKeySetting;
@@ -49,7 +58,7 @@ public class JwtTokenService
         return await encryptingKeySetting.GetRsaSecurityKeyAsync(true);
     }
 
-    internal async Task<(ClaimsPrincipal, string)> GetSecurityAsync(string jwt)
+    public async Task<(ClaimsPrincipal, string)> GetSecurityAsync(string jwt)
     {
         TokenValidationParameters tokenValidationParameters = new();
         tokenValidationParameters.TokenDecryptionKey = await DecryptingKeyAsync();
@@ -59,7 +68,7 @@ public class JwtTokenService
         //tokenValidationParameters.ValidateAudience = false
         //tokenValidationParameters.ValidateIssuer = false
 
-        ClaimsPrincipal claimsPrincipal = jwtSecurityTokenHandler.ValidateToken(jwt, 
+        ClaimsPrincipal claimsPrincipal = jwtSecurityTokenHandler.ValidateToken(jwt,
             tokenValidationParameters, out SecurityToken securityToken);
 
         if (securityToken is JwtSecurityToken securedToken)

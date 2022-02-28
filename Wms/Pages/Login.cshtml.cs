@@ -17,11 +17,11 @@ public class LoginModel : PageModel
 
     private readonly ILogger<LoginModel> logger;
 
-    private readonly UserService userService;
+    private readonly IUserService userService;
 
-    private readonly JwtTokenService jwtTokenService;
+    private readonly IJwtTokenService jwtTokenService;
 
-    public LoginModel(ILogger<LoginModel> logger, UserService userService, JwtTokenService jwtTokenService)
+    public LoginModel(ILogger<LoginModel> logger, IUserService userService, IJwtTokenService jwtTokenService)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userService = userService ?? throw new ArgumentNullException(nameof(userService));
@@ -72,7 +72,6 @@ public class LoginModel : PageModel
 #pragma warning restore S125 // Sections of code should not be commented out
 
         LoginResponse loginResponse = await userService.AuthenticateAsync(Login);
-
 
         var (claimsPrincipal, newJwt) = await jwtTokenService.GetSecurityAsync(loginResponse.Jwt);
 

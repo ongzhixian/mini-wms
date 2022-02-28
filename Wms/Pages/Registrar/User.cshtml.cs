@@ -14,9 +14,14 @@ public class UserModel : PageModel
     [BindProperty]
     public IEnumerable<UserRecord> UserList { get; set; } = new List<UserRecord>();
 
-    [BindProperty(SupportsGet =true)]
-    public PagedDataOptions PagedData { get; set; } = new PagedDataOptions(); 
+    [BindProperty]
+    public PagedDataOptions PagedData { get; set; } = new PagedDataOptions();
 
+    [BindProperty(SupportsGet = true, Name = "pg")]
+    public int PageNum { get; set; } = 1;
+
+    //[BindProperty(SupportsGet = true)]
+    //public int PageSize { get; set; }
 
     private readonly UserService userService;
 
@@ -24,6 +29,11 @@ public class UserModel : PageModel
     {
         this.userService = userService ?? throw new Exception(nameof(userService));
 
+        // SetupPageDefaults();
+    }
+
+    void SetupPageDefaults()
+    {
         PagedData.Page = 1;
         PagedData.PageSize = 5;
         PagedData.DataType = "User";
@@ -34,19 +44,23 @@ public class UserModel : PageModel
 
     public async Task OnGetAsync()
     {
-        if (Request.Query.ContainsKey("pg") && int.TryParse(Request.Query["pg"], out int pageNumber) && pageNumber > 0)
-        {
-            PagedData.Page = (uint)pageNumber;
-        }
+        //SetupPageDefaults();
 
-        if (Request.Query.ContainsKey("ps") && int.TryParse(Request.Query["ps"], out int pageSize) && pageSize > 0)
-        {
-            PagedData.PageSize = (uint)pageSize;
-        }
+        //if (Request.Query.ContainsKey("pg") && int.TryParse(Request.Query["pg"], out int pageNumber) && pageNumber > 0)
+        //{
+        //    PagedData.Page = (uint)pageNumber;
+        //}
 
-        var result = await userService.GetAllUsersAsync(PagedData);
+        //if (Request.Query.ContainsKey("ps") && int.TryParse(Request.Query["ps"], out int pageSize) && pageSize > 0)
+        //{
+        //    PagedData.PageSize = (uint)pageSize;
+        //}
 
-        UserList = result.Data;
+        // var result = await userService.GetAllUsersAsync(PagedData);
+
+        //UserList = result.Data;
+
+        //RedirectToPage("Query", new { name1 = "value1", name2 = "value2" });
     }
 }
 

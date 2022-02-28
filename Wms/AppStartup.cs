@@ -171,9 +171,17 @@ internal static class AppStartup
 
         });
 
-
-        services.AddScoped<UserService>();
-        services.AddScoped<JwtTokenService>();
+        if (configuration.GetValue<bool>("Application:UseLocal"))
+        {
+            services.AddScoped<IUserService, LocalUserService>();
+            services.AddScoped<IJwtTokenService, LocalJwtTokenService>();
+        }
+        else
+        {
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
+        }
+            
         services.AddScoped<PkedService>();
         
         services.AddScoped<AuthenticationEndpoint>();

@@ -3,6 +3,14 @@
 @{
     ViewData["Title"] = "User list";
     int lineItemCount = 1;
+
+    // We want to write try multiple implementation
+    // Choices:
+    // jQuery
+    // Knockout
+    // Vue
+    // Backbone/Underscore
+    // React
 }
 
 <table class="table table-striped">
@@ -14,85 +22,70 @@
                         User list
                         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="searchRow" aria-expanded="false" aria-controls="searchRow"><span class="bi-search"></span></button>
                     </h3>
-                    <span class="records-info">Record 5 / @Model.UserList.Count() (Page 1 of 1)</span>
+
+                    <span class="records-info">
+                        Record 1 - 5 of  <span data-bind="text: totalRecordCount"></span>
+                        (Page 1 of 2)
+
+                    </span>
                 </div>
             </th>
         </tr>
-
         <tr>
             <th scope="col">#</th>
-            @*<th scope="col">Username
-                <button class="btn btn-link" type="button"><span class="bi-sort-down-alt"></span></button>
-                </th>
-                <th scope="col">First name
-                <button class="btn btn-link" type="button"><span class="bi-sort-down-alt"></span></button>
-                </th>
-                <th scope="col">Last name
-                <button class="btn btn-link" type="button"><span class="bi-sort-down-alt"></span></button>
-                </th>*@
-            @foreach (var item in Model.PagedData.DataFieldList)
-            {
-                <th scope="col">
-                    
-                    @if (item.SortAscending)
-                    {
-                        <a class="" 
-                        asp-route-pg="@Model.PagedData.Page" asp-route-ps="@Model.PagedData.PageSize"
-                        asp-route-sort="@item.Name" asp-route-ascending="@item.SortAscending">
-                            @item.Name <span class="bi-sort-down-alt"></span>
-                        </a>
-
-                        @*<button class="btn btn-link" type="button">
-
-                            @item.Name <span class="bi-sort-down-alt"></span>
-                        </button>*@
-                    }
-                    else
-                    {
-                        <button class="btn btn-link" type="button">
-                            @item.Name <span class="bi-sort-up-alt"></span>
-                        </button>
-                    }
-
-                </th>
-            }
+            <!-- ko foreach: fieldNames -->
+            <th data-bind="text: $data"></th>
+            <!-- /ko -->
         </tr>
     </thead>
-    <tbody>
-        @foreach (var item in Model.UserList)
-        {
-            <tr>
-                <th scope="row">@(lineItemCount++)</th>
-                <td>@item.Username</td>
-                <td>@item.FirstName</td>
-                <td>@item.LastName</td>
-            </tr>
-        }
+    <tbody data-bind="foreach: seats">
+        <tr>
+            <td data-bind="text: ($index() + 1)"></td>
+            <td data-bind="text: username"></td>
+            <td data-bind="text: firstName"></td>
+            <td data-bind="text: lastName"></td>
+        </tr>
     </tbody>
 </table>
 
-<nav aria-label="Page navigation example">
-    <ul class="pagination">
+
+<nav class="pager" aria-label="Page navigation">
+    <ul class="pagination inline">
         <li class="page-item">
             <a class="page-link" href="#" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
+
+        <li class="page-item"><span class="page-link interactive" data-bind="click:() => getPage(1)">1</span></li>
+        <li class="page-item"><span class="page-link interactive" data-bind="click:() => getPage(2)">2</span></li>
+        <li class="page-item"><span class="page-link interactive" data-bind="click:() => getPage(3)">3</span></li>
+
+        @*
         <li class="page-item"><a class="page-link" asp-page="/Registrar/User" asp-route-pg="2" asp-route-ps="5">2</a></li>
         <li class="page-item"><a class="page-link" asp-page="/Registrar/User" asp-route-pg="1" asp-route-ps="8">3</a></li>
-        
+        *@
         <li class="page-item">
             <a class="page-link" href="#" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>
     </ul>
+
+    <select class="form-select inline" aria-label="select page"
+            data-bind="options: pageSizes, value: selectedPageSize, optionsText: 'text', event: { change: changePageSize }"></select>
 </nav>
 
 <a asp-page="/Registrar/User/Add" class="btn btn-primary">Add user</a>
 
-@*<form>
+@*
+
+    <p>@Model.PagedData.ToQueryString()</p>
+
+    <p>First name: <strong>todo</strong></p>
+    <p>Last name: <strong>todo</strong></p>
+
+    <form>
     <button type="submit" class="btn btn-primary"><span class="bi-search"></span></button>
     <label for="searchFilter" class="visually-hidden">Search</label>
     <input type="text" class="form-control" id="searchFilter" placeholder="Username pattern" />
@@ -100,11 +93,14 @@
     <input type="text" class="form-control" id="searchFilter" placeholder="First name pattern" />
     <label for="searchFilter" class="visually-hidden">Search</label>
     <input type="text" class="form-control" id="searchFilter" placeholder="Last name pattern" />
-</form>*@
+    </form>
 
-<input type="hidden" value="@Model" />
+    <input type="hidden" value="@Model" />
+*@
 
-@*@section Scripts
+
+@*
+    @section Scripts
     {
     <script type="text/javascript">
     "use strict";
@@ -118,4 +114,127 @@
 
     }(jQuery));
     </script>
-    }*@
+    }
+*@
+
+@section Scripts
+{
+<script type="text/javascript" src="~/lib/knockout/knockout-latest.js"></script>
+<script type="text/javascript">
+    "use strict";
+
+    var viewModel;
+
+    function SeatReservation(name, initialMeal) {
+        var self = this;
+        self.name = name;
+        self.meal = ko.observable(initialMeal);
+    }
+
+    //function LineItem(e) {
+    //    // {username: 'apple', firstName: 'apple', lastName: 'comp'}
+    //    debugger;
+    //}
+
+    function AppViewModel(dataResponse) {
+        var self = this;
+
+        // Fields
+        self.pageSizes = [5, 8, 12].map(function(element) {
+            return { "value": element, "text": `${element} records per page`}
+        });
+
+        // Observables
+        self.selectedPageSize = ko.observable(5);
+        self.totalRecordCount = ko.observable(0);
+        self.fieldNames = ko.observableArray([]);
+        self.seats = ko.observableArray([]);
+
+        // Functions
+
+        //var mapped = dataArray.map((e) => {
+        //    return new LineItem(e);
+        //});
+
+        // dataResponse
+        // {fieldNames: Array(3), data: Array(5), totalRecordCount: 11}
+
+
+        //self.totalRecordCount = ko.observable(dataResponse.totalRecordCount);
+        //self.fieldNames = ko.observableArray(dataResponse.fieldNames);
+        //self.seats = ko.observableArray(dataResponse.data);
+
+        self.getPage = function(pageNumber = 1) {
+            console.info("to get page %s", pageNumber);
+            
+            var request = new DataRequest("User", pageNumber, this.selectedPageSize().value);
+
+            console.info(`Request: ${request.toJson()} `);
+            //debugger;
+            // Request: {"DataType":"User", "Page":1, "PageSize":{"value":5,"text":"5 records per page"},"SortFields":[]}
+
+            //JSON.stringify({
+            //        "Page":1,
+            //        "PageSize":12,
+            //        "DataType":"User",
+            //        "SortFields":[
+            //            { "FieldName":"firstName", "SortDirection":0 },
+            //            { "FieldName":"lastName", "SortDirection":1 }
+            //        ]
+            //    })
+
+            $.ajax({
+                url : "https://localhost:5101/api/values",
+                method: "POST",
+                contentType: "application/json",
+                data: request.toJson(),
+                success: function( data, textStatus, jqXHR ) {
+                    debugger;
+                    viewModel.updateWithResponse(data);
+                },
+                error: function ( jqXHR, textStatus, errorThrown ) {
+                    debugger;
+                    console.error(`getPage AJAX ${textStatus} - ${errorThrown}`);
+                },
+                complete: function ( jqXHR, textStatus ) {
+                    console.info(`getPage AJAX complete with ${textStatus}`);
+                }
+            });
+        }
+
+        self.updateWithResponse = function(received) {
+            viewModel.totalRecordCount(received.totalRecordCount);
+
+            // Count total number of pages
+            // Calc start record number
+            // Calc end record number
+
+            viewModel.fieldNames(received.fieldNames);
+            viewModel.seats(received.data);
+        }
+
+        self.changePageSize = function(vm, e) {
+            this.getPage();
+        };
+
+    }
+
+    function DataRequest(dataType, page = 1, pageSize = 12) {
+        this.DataType = "User";
+        this.Page = page;
+        this.PageSize = pageSize;
+        this.SortFields = [];
+        this.toJson = function() {
+            return JSON.stringify(this);
+        }
+    }
+
+    (function( $ ) {
+        $( document ).ready( function() {
+            viewModel = new AppViewModel();
+            ko.applyBindings(viewModel); // Activates knockout.js
+            viewModel.getPage(1);
+        });
+    })( jQuery );
+</script>
+}

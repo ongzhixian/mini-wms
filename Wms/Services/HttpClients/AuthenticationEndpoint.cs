@@ -15,7 +15,7 @@ public class AuthenticationEndpoint : BearerHttpClient
 {
     private readonly ILogger<AuthenticationEndpoint> logger;
 
-    private readonly JwtTokenService jwtTokenService;
+    private readonly IJwtTokenService jwtTokenService;
 
     private readonly PkedService pkedService;
 
@@ -32,7 +32,7 @@ public class AuthenticationEndpoint : BearerHttpClient
 
     public AuthenticationEndpoint(
         ILogger<AuthenticationEndpoint> logger
-        , JwtTokenService jwtTokenService
+        , IJwtTokenService jwtTokenService
         , IHttpClientFactory httpClientFactory
         , IOptionsMonitor<HttpClientSetting> optionsMonitor
         , IHttpContextAccessor httpContextAccessor
