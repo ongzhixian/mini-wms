@@ -1,0 +1,9 @@
+﻿@using Wms.Models.Notifications
+@{
+    var notification = ViewData["Notification"] as NotificationBase;
+    if (notification == null)
+    {
+        return;
+    }
+}
+<div class="notification alert-@notification.NotificationType" role="alert">@notification.Message</div>
