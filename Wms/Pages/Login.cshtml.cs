@@ -6,6 +6,7 @@ using Mini.Common.Responses;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Wms.Models;
+using Wms.Models.Notifications;
 using Wms.Services;
 
 namespace Wms.Pages;
@@ -32,11 +33,7 @@ public class LoginModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            ViewData["Alert"] = new BootstrapAlert()
-            {
-                AlertType = "danger",
-                Description = "Invalid form."
-            };
+            ViewData["Notification"] = new ErrorNotification("Invalid form.");
             return Page();
         }
 
@@ -86,14 +83,9 @@ public class LoginModel : PageModel
 
             return SignIn(claimsPrincipal, authenticationProperties,
                 CookieAuthenticationDefaults.AuthenticationScheme);
-
         }
 
-        ViewData["Message"] = new BootstrapAlert()
-        {
-            AlertType = "danger",
-            Description = "Invalid credentials."
-        };
+        ViewData["Notification"] = new InformationNotification("Invalid credentials.");
 
         return new OkResult();
     }
