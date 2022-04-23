@@ -12,4 +12,13 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
   </ItemGroup>
   
+  <ItemGroup>
+    <!-- extends watching group to include *.cshtml and *.razor files -->
+    <Watch Include="**\*.cshtml;*.razor;*.js;*.css" Exclude="**\obj\**\*;bin\**\*" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Watch Remove="Pages\Shared\Layouts\_DarkLogin.cshtml" />
+    <Watch Remove="Partials\Public\_NotificationPartial.cshtml" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Nova+Mono&family=Orbitron:wght@400;700&family=Wire+One&display=swap');
+
+/*
+    font-family: 'Nova Mono', monospace;
+    font-family: 'Orbitron', sans-serif;
+    font-family: 'Wire One', sans-serif;
+    var(--bs-body-font-family)
+*/
+:root {
+    --blue: #146152;
+    --green: #44803F;
+    --light-green: #B4CF66;
+    --yellow: #FFEC5C;
+    --orange: #FF5A33;
+    --bg-color: #222;
+    --fn-attn: 'Orbitron', sans-serif;
+    --fn-text: 'Nova Mono', monospace;
+    --fn-thin: 'Wire One', sans-serif;
+    --tx-color: var(--light-green);
+    --bd-default: outset var(--blue);
+    --bd-highlight: inset var(--light-green);
+}
+
+html {
+    font-size: 1em;
+    font-family: var(--fn-text);
+    background-color: var(--bg-color);
+    color: var(--tx-color);
+}
+
+h1, h2, h3, h4, h5, h6, label, button {
+    font-family: var(--fn-attn);
+}
+
+/*Flex*/
+
+.flex-container {
+    display: flex;
+}
+
+    .flex-container.column {
+        flex-direction: column;
+    }
+
+    .flex-container.vh-center {
+        align-items: center;
+        justify-content: center;
+    }
+
+.box {
+    padding:1em;
+    box-shadow: 0px 0px 14px rgba(10, 10, 10, 0.6);
+}
+
+/* Forms (login) */
+
+form.login label {
+    font-weight:bold;
+}
+
+form.login input {
+    margin: .6em 0;
+    padding: .167em;
+    font-size: 1.27em;
+    background-color: transparent;
+    border: var(--bd-default);
+    color: var(--tx-color);
+    text-align: center;
+    font-family: var(--fn-mono);
+    width: 280px;
+    height: 1.8em;
+    transition: border 1s;
+}
+    form.login input:hover {
+        border: var(--bd-highlight);
+    }
+
+    form.login input:focus {
+        border: var(--bd-highlight);
+        outline: none;
+    }
+
+form.login button {
+    margin: .3em;
+    padding: .267em;
+    font-size: 1.27em;
+    background-color: transparent;
+    border: var(--bd-default);
+    color: var(--tx-color);
+    border-radius: 1em;
+    opacity: 0.3;
+    transition: border 1s, opacity 0.5s;
+}
+
+    form.login button:hover {
+        cursor: pointer;
+        border: var(--bd-highlight);
+        opacity: 1;
+        
+    }
+
+    form.login button:focus {
+        outline: var(--bd-highlight);
+        opacity: 1;
+    }
+
+p {
+    font-family: var(--fn-mono);
+}
+
+
+/* Notifications */
+
+.notification {
+    margin-top:1em;
+    font-family: var(--fn-attn);
+}
+
+    .notification.alert-Error {
+        color: var(--orange);
+    }
+
+
+/*@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.action {
+    margin-bottom: 1em;
+}*/
+/*.pagination .previous, .pagination .next {
+    width: 100px;
+    text-align: center;
+}*/
+
+/*.caption {
+    display: flex;
+    justify-content: space-between;
+}
+
+    .caption h3 {
+        align-self: center;
+        margin: 0;
+    }
+
+    .caption .records-info {
+        align-self: center;
+    }
+
+.interactive {
+    cursor: pointer;
+}
+
+.inline {
+    display: inline-flex;
+    width: auto;
+    margin: 0;
+}
+
+nav.pager {
+    margin-bottom: 0.678em;
+    display: flex;
+    justify-content: space-between;
+}*/
