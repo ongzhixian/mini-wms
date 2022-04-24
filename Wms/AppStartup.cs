@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Mini.Common.Services;
 using Mini.Common.Settings;
+using Wms.DbContexts;
 using Wms.Models;
 using Wms.Services;
 using Wms.Services.HttpClients;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 
 namespace Wms;
 
@@ -79,6 +82,26 @@ internal static class AppStartup
                 .Build();
 
         });
+    }
+
+    internal static void SetupDatabaseContexts(ConfigurationManager configuration, IServiceCollection services)
+    {
+        // To do something about "UseSqlite", we should not bind variable code
+        services.AddDbContext<LocalContext>(options =>
+            options.UseSqlite(ResolveSqliteDbConnectionString(configuration.GetConnectionString("LocalContext"))
+        ));
+
+        // To do something about "UseSqlite", we should not bind variable code
+        services.AddDbContext<BloggingContext>(options =>
+            options.UseSqlite(ResolveSqliteDbConnectionString(configuration.GetConnectionString("BloggingContext"))
+        ));
+
+        // Code snippet for use with SqlServer
+        //services.AddDbContext<SchoolContext>(
+        //    options => options.UseSqlServer(
+        //        configuration.GetConnectionString("SchoolContext")));
+
+        services.AddDatabaseDeveloperPageExceptionFilter();
     }
 
     internal static void SetupHttpClient(ConfigurationManager configuration, IServiceCollection services)
@@ -190,6 +213,69 @@ internal static class AppStartup
 
     }
 
+    internal static void InitializeDatabases(IServiceProvider serviceProvider)
+    {
+        using (var scope = serviceProvider.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+
+            InitializeLocalContext(services);
+
+            InitializeBlogginContext(services);
+        }
+    }
+    private static void InitializeBlogginContext(IServiceProvider services)
+    {
+        var context = services.GetRequiredService<BloggingContext>();
+
+        context.Database.EnsureCreated();
+    }
+
+    private static void InitializeLocalContext(IServiceProvider services)
+    {
+        var context = services.GetRequiredService<LocalContext>();
+
+        context.Database.EnsureCreated();
+        
+        LocalContextInitializer.Initialize(context);
+    }
+
+    private static string ResolveSqliteDbConnectionString(string connectionString)
+    {
+        // The "Data Source" field specifies the location of the database.
+        // The location may be a relative (non-rooted) path.
+        // To avoid ambiguity, we will resolve relative path in relation to running executable.
+        // Example  of relative path: "./Data/asdbFile.sqlite"
+        // Examples of absolute path: "/Data/dbFile.sqlite" and "C:/Data/dbFile.sqlite"
+
+        SqliteConnectionStringBuilder builder = new SqliteConnectionStringBuilder(connectionString);
+
+        if (!Path.IsPathRooted(builder.DataSource))
+        {
+            var filePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, builder.DataSource));
+
+            Console.WriteLine($"Resolved file path: {filePath}");
+
+            // Create the directory if it does not exists
+
+            var directoryPath = Path.GetDirectoryName(filePath);
+
+            if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            // To make configurable
+            //if (File.Exists(filePath))
+            //{
+            //    File.Delete(filePath);
+            //}
+
+            builder.DataSource = filePath;
+        }
+
+        return builder.ToString();
+    }
 }
 
 

@@ -2,7 +2,9 @@ using Mini.Common.Models;
 using Mini.Wms.DomainMessages;
 using System.Reflection;
 using Wms;
+using Wms.DbContexts;
 using Wms.Models;
+using Wms.Models.Data.Blogging;
 using Wms.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,8 @@ AppStartup.SetupSession(builder.Services);
 AppStartup.SetupAuthentication(builder.Services);
 
 AppStartup.SetupAuthorization(builder.Services);
+
+AppStartup.SetupDatabaseContexts(builder.Configuration, builder.Services);
 
 AppStartup.SetupHttpClient(builder.Configuration, builder.Services);
 
@@ -28,6 +32,13 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    app.UseDeveloperExceptionPage();
+    //app.UseMigrationsEndPoint();
+}
+
+AppStartup.InitializeDatabases(app.Services);
 
 app.UseHttpsRedirection();
 
@@ -72,7 +83,7 @@ app.MapPost("/api/values", async (DataRequest dataRequest, IUserService userServ
             TotalRecordCount = result.TotalRecordCount
         });
     }
-    catch (Exception ex)
+    catch (Exception)
     {
         throw;
     }
@@ -114,5 +125,33 @@ app.MapPost("/api/values", async (DataRequest dataRequest, IUserService userServ
 string t = "{\"TotalRecordCount\":11,\"data\":[{\"Username\":\"apple\",\"FirstName\":\"apple\",\"LastName\":\"comp\"}],\"Page\":1,\"PageSize\":5}";
 var res1 = System.Text.Json.JsonSerializer.Deserialize<PagedData<UserRecord>>(t);
 
+//using (var db = new BloggingContext())
+//{
+    //    // Note: This sample requires the database to be created before running.
+    //    Console.WriteLine($"Database path: {db.DbPath}.");
+
+    //    // Create
+    //Console.WriteLine("Inserting a new blog");
+    //db.Add(new Blog { Url = "http://blogs.msdn.com/adonet" });
+    //db.SaveChanges();
+
+    //    // Read
+    //    Console.WriteLine("Querying for a blog");
+    //    var blog = db.Blogs
+    //        .OrderBy(b => b.BlogId)
+    //        .First();
+
+    //    // Update
+    //    Console.WriteLine("Updating the blog and adding a post");
+    //    blog.Url = "https://devblogs.microsoft.com/dotnet";
+    //    blog.Posts.Add(
+    //        new Post { Title = "Hello World", Content = "I wrote an app using EF Core!" });
+    //    db.SaveChanges();
+
+    //    // Delete
+    //    Console.WriteLine("Delete the blog");
+    //    db.Remove(blog);
+    //    db.SaveChanges();
+//}
 
 app.Run();
