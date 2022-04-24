@@ -85,8 +85,8 @@ public class LoginModel : PageModel
                 CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
-        ViewData["Notification"] = new InformationNotification("Invalid credentials.");
+        ViewData["Notification"] = new BadRequestNotification("Invalid credentials.");
 
-        return new OkResult();
+        return Page();
     }
 }
