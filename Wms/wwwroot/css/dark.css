@@ -120,6 +120,10 @@ p {
         color: var(--orange);
     }
 
+    .notification.alert-Warning {
+        color: var(--yellow);
+    }
+
 
 /*@media (min-width: 768px) {
     html {
