@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Wms.Extensions;
 
 namespace Wms.Services;
 
@@ -28,15 +30,24 @@ public class LocalJwtTokenService : IJwtTokenService
 
     public async Task<(ClaimsPrincipal, string)> GetSecurityAsync(string jwt)
     {
-        List<Claim> claims = new List<Claim>();
+        if (string.IsNullOrEmpty(jwt))
+        {
+            return (new ClaimsPrincipal(), string.Empty);
+        }
 
-        claims.Add(new Claim(ClaimTypes.Name, "zhixian"));
+        var tokenHandler = new JwtSecurityTokenHandler();
 
-        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var securityToken = tokenHandler.ReadJwtToken(jwt);
 
-        ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+        if (securityToken == null)
+        {
+            return (new ClaimsPrincipal(), string.Empty);
+        }
 
-        return (claimsPrincipal, string.Empty);
+        var claimsIdentity = new ClaimsIdentity(
+            securityToken.Claims.Map(tokenHandler.InboundClaimTypeMap),
+            CookieAuthenticationDefaults.AuthenticationScheme);
 
+        return (new ClaimsPrincipal(claimsIdentity), string.Empty);
     }
 }
