@@ -1,23 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Wms.Models.Data;
-using Wms.Models.Data.Blogging;
+using Wms.Models.Data.LocalShared;
 
 namespace Wms.DbContexts;
 
-public class BloggingContext : DbContext
+public class LocalContext : DbContext
 {
-    public DbSet<Blog> Blogs => Set<Blog>();
+    public DbSet<LocalUser> LocalUsers => Set<LocalUser>();
 
-    public DbSet<Post> Posts => Set<Post>();
+    public DbSet<LocalRole> LocalRoles => Set<LocalRole>();
 
-    public string DbPath { get; } = String.Empty;
-
-    public BloggingContext(DbContextOptions<BloggingContext> options) : base(options)
+    public LocalContext(DbContextOptions<LocalContext> options) : base(options)
     {
     }
 
-    public BloggingContext()
+    public LocalContext()
     {
         // Uncomment if we want to override the options passed to provider
         //var folder = Environment.SpecialFolder.LocalApplicationData;
@@ -51,6 +49,14 @@ public class BloggingContext : DbContext
         // Method 3. Model from EntityTypeConfiguration classes in assembly
         // This can be better written.
         modelBuilder.ApplyConfigurationsFromAssembly(
-            typeof(BlogEntityTypeConfiguration).Assembly);
+            typeof(LocalUserEntityTypeConfiguration).Assembly);
+
+        // Relation
+
+        //modelBuilder.Entity<LocalUser>()
+        //    .HasMany(t => t.Roles)
+        //    .WithMany(t => t.LocalUsers)
+        //    .UsingEntity(j => j.ToTable("LocalRole_LocalUser")); ;
+
     }
 }
