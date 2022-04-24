@@ -104,7 +104,7 @@ public class UserEndpoint : BearerHttpClient
             //var r = await responseMessage.Content.ReadFromJsonAsync<PagedData<UserRecord>>()
             return await responseMessage.Content.ReadFromJsonAsync<PagedData<UserRecord>>();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }

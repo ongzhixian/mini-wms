@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Wms.Models.Data;
 
-namespace Wms.DbContexts;
+namespace Wms.Models.Data.Blogging;
 
 //public class BloggingContextFactory : IDesignTimeDbContextFactory<BloggingContext>
 //{
@@ -20,6 +19,10 @@ public class BlogEntityTypeConfiguration : IEntityTypeConfiguration<Blog>
 {
     public void Configure(EntityTypeBuilder<Blog> builder)
     {
+        builder.HasKey(c => new {
+            c.BlogId
+        });
+
         builder
             .Property(b => b.Url)
             .IsRequired();
