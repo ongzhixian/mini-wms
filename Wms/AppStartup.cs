@@ -101,6 +101,12 @@ internal static class AppStartup
         //    options => options.UseSqlServer(
         //        configuration.GetConnectionString("SchoolContext")));
 
+
+        // Example of factory
+        //builder.Services.AddDbContextFactory<ContactContext>(opt =>
+        //    opt.UseSqlite($"Data Source={nameof(ContactContext.ContactsDb)}.db"));
+        // See: https://docs.microsoft.com/en-us/aspnet/core/blazor/blazor-server-ef-core?view=aspnetcore-6.0
+
         services.AddDatabaseDeveloperPageExceptionFilter();
     }
 
@@ -221,10 +227,22 @@ internal static class AppStartup
 
             InitializeLocalContext(services);
 
-            InitializeBlogginContext(services);
+            InitializeBloggingContext(services);
+
+            InitializeSchoolContext(services);
         }
     }
-    private static void InitializeBlogginContext(IServiceProvider services)
+
+    private static void InitializeSchoolContext(IServiceProvider services)
+    {
+        var context = services.GetRequiredService<SchoolContext>();
+
+        context.Database.EnsureCreated();
+
+        SchoolContextInitializer.Initialize(context);
+    }
+
+    private static void InitializeBloggingContext(IServiceProvider services)
     {
         var context = services.GetRequiredService<BloggingContext>();
 
