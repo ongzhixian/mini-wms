@@ -21,6 +21,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Watch Remove="Pages\School\Index.cshtml" />
     <Watch Remove="Pages\Shared\Layouts\_DarkLogin.cshtml" />
     <Watch Remove="Partials\Public\_NotificationPartial.cshtml" />
   </ItemGroup>
