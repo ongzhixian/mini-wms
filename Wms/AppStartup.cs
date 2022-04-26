@@ -96,6 +96,14 @@ internal static class AppStartup
             options.UseSqlite(ResolveSqliteDbConnectionString(configuration.GetConnectionString("BloggingContext"))
         ));
 
+        services.AddDbContext<SchoolContext>(options =>
+            options.UseSqlite(ResolveSqliteDbConnectionString(configuration.GetConnectionString("SchoolContext"))
+        ));
+
+        services.AddDbContext<AgileContext>(options =>
+            options.UseSqlite(ResolveSqliteDbConnectionString(configuration.GetConnectionString("AgileContext"))
+        ));
+
         // Code snippet for use with SqlServer
         //services.AddDbContext<SchoolContext>(
         //    options => options.UseSqlServer(

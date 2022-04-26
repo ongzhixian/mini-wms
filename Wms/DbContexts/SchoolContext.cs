@@ -14,7 +14,7 @@ public class SchoolContext : DbContext
     
     public DbSet<Course> Courses => Set<Course>();
 
-    public SchoolContext(DbContextOptions<LocalContext> options) : base(options)
+    public SchoolContext(DbContextOptions<SchoolContext> options) : base(options)
     {
     }
 

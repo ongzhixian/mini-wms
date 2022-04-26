@@ -10,9 +10,9 @@
 
         public int StoryPoints { get; set; }
 
-        public IList<string> AcceptanceCriteria { get; set; }
+        // public IList<string> AcceptanceCriteria { get; set; }
 
-        public IList<string> TechnicalAcceptanceCriteria { get; set; }
+        // public IList<string> TechnicalAcceptanceCriteria { get; set; }
 
     }
 }
