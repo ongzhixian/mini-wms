@@ -7,18 +7,15 @@
     var(--bs-body-font-family)
 */
 :root {
-    --blue: #146152;
-    --green: #44803F;
-    --light-green: #B4CF66;
-    --yellow: #FFEC5C;
-    --orange: #FF5A33;
-    --bg-color: #fff;
+    --light-green: #b6d2cb;
+    --almond: #dfcfc0;
+    --dark: #474554;
+    --light: #eee;
+    --bg-color: var(--light);
     --fn-attn: 'Orbitron', sans-serif;
     --fn-text: 'Nova Mono', monospace;
     --fn-thin: 'Wire One', sans-serif;
-    --tx-color: var(--light-green);
-    --bd-default: outset var(--blue);
-    --bd-highlight: inset var(--light-green);
+    --tx-color: var(--dark);
 }
 
 html {
@@ -128,51 +125,68 @@ p {
         color: var(--yellow);
     }
 
+/* Table */
+
+th {
+    font-family: var(--fn-text);
+    text-align: start;
+}
 
 /* Menu */
 
-nav.top-menu {
+/* Navbar container */
+.navbar {
     overflow: hidden;
-    background-color: #636;
+    background-color: var(--almond);
+    color: var(--dark);
+    font-family: var(--fn-attn);
 }
 
+    /* Links inside the navbar */
     .navbar a {
+        float: left;
         font-size: 16px;
+        color: var(--dark);
         text-align: center;
         padding: 14px 16px;
         text-decoration: none;
-        display:inline-block;
     }
 
+/* The dropdown container */
 .dropdown {
-    /*float: left;*/
-    display:inline-block;
+    float: left;
     overflow: hidden;
 }
 
-    .dropdowna .dropbtn {
+    /* Dropdown button */
+    .dropdown .dropbtn {
         font-size: 16px;
         border: none;
         outline: none;
+        color: var(--dark);
         padding: 14px 16px;
         background-color: inherit;
-        font-family: inherit;
-        margin: 0;
+        font-family: inherit; /* Important for vertical align on mobile phones */
+        margin: 0; /* Important for vertical align on mobile phones */
+        cursor: pointer;
     }
 
+    /* Add a red background color to navbar links on hover */
     .navbar a:hover, .dropdown:hover .dropbtn {
-        background-color: red;
+        background-color: var(--light-green);
     }
 
+/* Dropdown content (hidden by default) */
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: var(--almond);
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
 
+    /* Links inside the dropdown */
     .dropdown-content a {
         float: none;
         color: black;
@@ -182,165 +196,12 @@ nav.top-menu {
         text-align: left;
     }
 
+        /* Add a grey background color to dropdown links on hover */
         .dropdown-content a:hover {
-            background-color: #ddd;
+            background-color: var(--light-green);
         }
 
+/* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
     display: block;
-}
-
-/*nav.top-menu {
-    font-family: monospace;
-    border-bottom: 4px solid burlywood;
-}
-
-    nav.top-menu .dropdown h1 {
-        margin:0;
-        cursor:pointer;
-    }
-
-    nav.top-menu .dropdown {
-        display: inline-block;
-        position: relative;
-    }
-
-    nav.top-menu .dropdown-content {
-        display: none;
-        position: absolute;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        background-color: var(--bg-color);
-    }
-
-    nav.top-menu .dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    nav.top-menu .dropdown-content a {
-        display: block;
-        color: #000000;
-        padding: 5px;
-        text-decoration: none;
-    }
-
-        nav.top-menu .dropdown-content a:hover {
-            color: #FFFFFF;
-            background-color: #00A4BD;
-        }
-*/
-/*
-nav.top-menu a {
-    text-decoration: none;
-}
-
-nav.top-menu ul {
-    background: darkorange;
-    list-style: none;
-    margin: 0;
-    padding-left: 0;
-}
-
-nav.top-menu li {
-    color: #fff;
-    background: darkorange;
-    display: block;
-    float: left;
-    padding: 1rem;
-    position: relative;
-    text-decoration: none;
-    transition-duration: 0.5s;
-}
-
-    nav.top-menu li a {
-        color: #fff;
-    }
-
-    nav.top-menu li:hover,
-    nav.top-menu li:focus-within {
-        background: red;
-        cursor: pointer;
-    }
-
-        li:focus-within a {
-            outline: none;
-        }
-
-nav.top-menu ul li ul {
-    background: orange;
-    visibility: hidden;
-    opacity: 0;
-    min-width: 5rem;
-    position: absolute;
-    transition: all 0.5s ease;
-    margin-top: 1rem;
-    left: 0;
-    display: none;
-}
-
-    nav.top-menu ul li:hover > ul,
-    nav.top-menu ul li:focus-within > ul,
-    nav.top-menu ul li ul:hover,
-    nav.top-menu ul li ul:focus {
-        visibility: visible;
-        opacity: 1;
-        display: block;
-    }
-
-    nav.top-menu ul li ul li {
-        clear: both;
-        width: 100%;
-    }*/
-
-
-/*@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
-}
-
-html {
-    position: relative;
-    min-height: 100%;
-}
-
-body {
-    margin-bottom: 60px;
-}
-
-.action {
-    margin-bottom: 1em;
-}*/
-/*.pagination .previous, .pagination .next {
-    width: 100px;
-    text-align: center;
-}*/
-
-/*.caption {
-    display: flex;
-    justify-content: space-between;
-}
-
-    .caption h3 {
-        align-self: center;
-        margin: 0;
-    }
-
-    .caption .records-info {
-        align-self: center;
-    }
-
-.interactive {
-    cursor: pointer;
-}
-
-.inline {
-    display: inline-flex;
-    width: auto;
-    margin: 0;
-}
-
-nav.pager {
-    margin-bottom: 0.678em;
-    display: flex;
-    justify-content: space-between;
-}*/
+} 
