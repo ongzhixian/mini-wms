@@ -1,5 +1,4 @@
 ﻿using Wms.Models.Data.Education;
-using Wms.Models.Data.LocalShared;
 
 namespace Wms.DbContexts;
 
@@ -40,6 +39,11 @@ public static class SchoolContextInitializer
 
     private static void InitializeCourse(SchoolContext context)
     {
+        if (context.Courses.Any())
+        {
+            return;   // DB has been seeded
+        }
+
         var courses = new Course[]
                     {
                 new Course{CourseID=1050,Title="Chemistry",Credits=3},
@@ -58,6 +62,11 @@ public static class SchoolContextInitializer
 
     private static void InitializeEnrollment(SchoolContext context)
     {
+        if (context.Enrollments.Any())
+        {
+            return;   // DB has been seeded
+        }
+
         var enrollments = new Enrollment[]
                     {
                 new Enrollment{StudentID=1,CourseID=1050,Grade=Grade.A},

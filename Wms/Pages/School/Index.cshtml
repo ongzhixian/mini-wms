@@ -1,16 +1,32 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    Layout = "Layouts/_DarkSchool";
+    ViewData["Title"] = "School";
+    int row = 1;
 }
-@*
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
 
-@User?.Identity?.IsAuthenticated
+<partial name="/Partials/School/_MenuPartial.cshtml" />
 
-@User?.IsInRole("Application:Administrator")
-
-@User?.IsInRole("Application:Administratorxx")*@
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <td>Ad</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@(row++)</td>
+            <td>Some data1</td>
+        </tr>
+        <tr>
+            <td>@(row++)</td>
+            <td>Some data2</td>
+        </tr>
+        <tr>
+            <td>@(row++)</td>
+            <td>Some data3</td>
+        </tr>
+    </tbody>
+</table>

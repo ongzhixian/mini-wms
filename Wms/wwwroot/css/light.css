@@ -1,0 +1,346 @@
+@import url('https://fonts.googleapis.com/css2?family=Nova+Mono&family=Orbitron:wght@400;700&family=Wire+One&display=swap');
+
+/*
+    font-family: 'Nova Mono', monospace;
+    font-family: 'Orbitron', sans-serif;
+    font-family: 'Wire One', sans-serif;
+    var(--bs-body-font-family)
+*/
+:root {
+    --blue: #146152;
+    --green: #44803F;
+    --light-green: #B4CF66;
+    --yellow: #FFEC5C;
+    --orange: #FF5A33;
+    --bg-color: #fff;
+    --fn-attn: 'Orbitron', sans-serif;
+    --fn-text: 'Nova Mono', monospace;
+    --fn-thin: 'Wire One', sans-serif;
+    --tx-color: var(--light-green);
+    --bd-default: outset var(--blue);
+    --bd-highlight: inset var(--light-green);
+}
+
+html {
+    font-size: 1.67em;
+    font-family: var(--fn-text);
+    background-color: var(--bg-color);
+    color: var(--tx-color);
+}
+
+body {
+    margin:0;
+}
+
+h1, h2, h3, h4, h5, h6, label, button {
+    font-family: var(--fn-attn);
+}
+
+/*Flex*/
+
+.flex-container {
+    display: flex;
+}
+
+    .flex-container.column {
+        flex-direction: column;
+    }
+
+    .flex-container.vh-center {
+        align-items: center;
+        justify-content: center;
+    }
+
+.box {
+    padding:1em;
+    box-shadow: 0px 0px 14px rgba(10, 10, 10, 0.6);
+}
+
+/* Forms (login) */
+
+form.login label {
+    font-weight:bold;
+}
+
+form.login input {
+    margin: .6em 0;
+    padding: .167em;
+    font-size: 1.27em;
+    background-color: transparent;
+    border: var(--bd-default);
+    color: var(--tx-color);
+    text-align: center;
+    font-family: var(--fn-mono);
+    width: 280px;
+    height: 1.8em;
+    transition: border 1s;
+}
+    form.login input:hover {
+        border: var(--bd-highlight);
+    }
+
+    form.login input:focus {
+        border: var(--bd-highlight);
+        outline: none;
+    }
+
+form.login button {
+    margin: .3em;
+    padding: .267em;
+    font-size: 1.27em;
+    background-color: transparent;
+    border: var(--bd-default);
+    color: var(--tx-color);
+    border-radius: 1em;
+    opacity: 0.3;
+    transition: border 1s, opacity 0.5s;
+}
+
+    form.login button:hover {
+        cursor: pointer;
+        border: var(--bd-highlight);
+        opacity: 1;
+        
+    }
+
+    form.login button:focus {
+        outline: var(--bd-highlight);
+        opacity: 1;
+    }
+
+p {
+    font-family: var(--fn-mono);
+}
+
+
+/* Notifications */
+
+.notification {
+    margin-top:1em;
+    font-family: var(--fn-attn);
+}
+
+    .notification.alert-Error {
+        color: var(--orange);
+    }
+
+    .notification.alert-Warning {
+        color: var(--yellow);
+    }
+
+
+/* Menu */
+
+nav.top-menu {
+    overflow: hidden;
+    background-color: #636;
+}
+
+    .navbar a {
+        font-size: 16px;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        display:inline-block;
+    }
+
+.dropdown {
+    /*float: left;*/
+    display:inline-block;
+    overflow: hidden;
+}
+
+    .dropdowna .dropbtn {
+        font-size: 16px;
+        border: none;
+        outline: none;
+        padding: 14px 16px;
+        background-color: inherit;
+        font-family: inherit;
+        margin: 0;
+    }
+
+    .navbar a:hover, .dropdown:hover .dropbtn {
+        background-color: red;
+    }
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+    .dropdown-content a {
+        float: none;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/*nav.top-menu {
+    font-family: monospace;
+    border-bottom: 4px solid burlywood;
+}
+
+    nav.top-menu .dropdown h1 {
+        margin:0;
+        cursor:pointer;
+    }
+
+    nav.top-menu .dropdown {
+        display: inline-block;
+        position: relative;
+    }
+
+    nav.top-menu .dropdown-content {
+        display: none;
+        position: absolute;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        background-color: var(--bg-color);
+    }
+
+    nav.top-menu .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    nav.top-menu .dropdown-content a {
+        display: block;
+        color: #000000;
+        padding: 5px;
+        text-decoration: none;
+    }
+
+        nav.top-menu .dropdown-content a:hover {
+            color: #FFFFFF;
+            background-color: #00A4BD;
+        }
+*/
+/*
+nav.top-menu a {
+    text-decoration: none;
+}
+
+nav.top-menu ul {
+    background: darkorange;
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+nav.top-menu li {
+    color: #fff;
+    background: darkorange;
+    display: block;
+    float: left;
+    padding: 1rem;
+    position: relative;
+    text-decoration: none;
+    transition-duration: 0.5s;
+}
+
+    nav.top-menu li a {
+        color: #fff;
+    }
+
+    nav.top-menu li:hover,
+    nav.top-menu li:focus-within {
+        background: red;
+        cursor: pointer;
+    }
+
+        li:focus-within a {
+            outline: none;
+        }
+
+nav.top-menu ul li ul {
+    background: orange;
+    visibility: hidden;
+    opacity: 0;
+    min-width: 5rem;
+    position: absolute;
+    transition: all 0.5s ease;
+    margin-top: 1rem;
+    left: 0;
+    display: none;
+}
+
+    nav.top-menu ul li:hover > ul,
+    nav.top-menu ul li:focus-within > ul,
+    nav.top-menu ul li ul:hover,
+    nav.top-menu ul li ul:focus {
+        visibility: visible;
+        opacity: 1;
+        display: block;
+    }
+
+    nav.top-menu ul li ul li {
+        clear: both;
+        width: 100%;
+    }*/
+
+
+/*@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.action {
+    margin-bottom: 1em;
+}*/
+/*.pagination .previous, .pagination .next {
+    width: 100px;
+    text-align: center;
+}*/
+
+/*.caption {
+    display: flex;
+    justify-content: space-between;
+}
+
+    .caption h3 {
+        align-self: center;
+        margin: 0;
+    }
+
+    .caption .records-info {
+        align-self: center;
+    }
+
+.interactive {
+    cursor: pointer;
+}
+
+.inline {
+    display: inline-flex;
+    width: auto;
+    margin: 0;
+}
+
+nav.pager {
+    margin-bottom: 0.678em;
+    display: flex;
+    justify-content: space-between;
+}*/

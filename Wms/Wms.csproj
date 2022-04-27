@@ -21,8 +21,19 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Compile Remove="Services\**" />
+    <Content Remove="Services\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Services\**" />
+    <Watch Remove="Services\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <Watch Remove="Pages\School\Index.cshtml" />
     <Watch Remove="Pages\Shared\Layouts\_DarkLogin.cshtml" />
+    <Watch Remove="Pages\Shared\Layouts\_DarkSchool.cshtml" />
     <Watch Remove="Partials\Public\_NotificationPartial.cshtml" />
+    <Watch Remove="Partials\Public\_SchoolMenuPartial.cshtml" />
+    <Watch Remove="Partials\School\_MenuPartial.cshtml" />
   </ItemGroup>
 </Project>
