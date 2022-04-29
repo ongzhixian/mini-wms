@@ -9,6 +9,7 @@ using Wms.Services;
 using Wms.Services.HttpClients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using MongoDB.Driver;
 
 namespace Wms;
 
@@ -109,6 +110,17 @@ internal static class AppStartup
         //    options => options.UseSqlServer(
         //        configuration.GetConnectionString("SchoolContext")));
 
+        // services.AddSingleton<IMongoDatabase>(sp =>
+        // {
+        //     string miniToolsConnectionString = configuration.GetValue<string>("mongodb:minitools:ConnectionString");
+        //     IMongoClient mongoClient = new MongoClient(miniToolsConnectionString);
+        //     string databaseName = MongoUrl.Create(miniToolsConnectionString).DatabaseName;
+        //     return mongoClient.GetDatabase(databaseName);
+        // });
+
+        // services.AddSingleton<IMongoCollection<User>>(sp => sp.GetRequiredService<IMongoDatabase>().GetCollection<User>("user"));
+        // services.AddSingleton<IMongoCollection<Bookmark>>(sp => sp.GetRequiredService<IMongoDatabase>().GetCollection<Bookmark>("bookmark"));
+        // services.AddSingleton<IMongoCollection<Note>>(sp => sp.GetRequiredService<IMongoDatabase>().GetCollection<Note>("note"));
 
         // Example of factory
         //builder.Services.AddDbContextFactory<ContactContext>(opt =>
