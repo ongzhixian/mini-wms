@@ -24,11 +24,15 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Watch Remove="Pages\Bookstore\Index.cshtml" />
     <Watch Remove="Pages\School\Index.cshtml" />
+    <Watch Remove="Pages\Shared\Layouts\_DarkBookstore.cshtml" />
     <Watch Remove="Pages\Shared\Layouts\_DarkLogin.cshtml" />
     <Watch Remove="Pages\Shared\Layouts\_DarkSchool.cshtml" />
     <Watch Remove="Partials\Public\_NotificationPartial.cshtml" />
     <Watch Remove="Partials\Public\_SchoolMenuPartial.cshtml" />
+    <Watch Remove="Partials\Bookstore\_MenuPartial.cshtml" />
     <Watch Remove="Partials\School\_MenuPartial.cshtml" />
+    <Watch Remove="Partials\Shared\_ContextMenuPartial.cshtml" />
   </ItemGroup>
 </Project>

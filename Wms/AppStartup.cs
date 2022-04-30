@@ -105,10 +105,15 @@ internal static class AppStartup
             options.UseSqlite(ResolveSqliteDbConnectionString(configuration.GetConnectionString("AgileContext"))
         ));
 
+
+
         // Code snippet for use with SqlServer
         //services.AddDbContext<SchoolContext>(
         //    options => options.UseSqlServer(
         //        configuration.GetConnectionString("SchoolContext")));
+
+        services.AddSingleton<BookstoreContext>(sp => 
+            new BookstoreContext(configuration.GetValue<string>("mongodb:minitools:ConnectionString")));
 
         // services.AddSingleton<IMongoDatabase>(sp =>
         // {

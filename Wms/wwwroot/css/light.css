@@ -26,7 +26,7 @@ html {
 }
 
 body {
-    margin:0;
+    margin: 0;
 }
 
 h1, h2, h3, h4, h5, h6, label, button {
@@ -49,14 +49,14 @@ h1, h2, h3, h4, h5, h6, label, button {
     }
 
 .box {
-    padding:1em;
+    padding: 1em;
     box-shadow: 0px 0px 14px rgba(10, 10, 10, 0.6);
 }
 
 /* Forms (login) */
 
 form.login label {
-    font-weight:bold;
+    font-weight: bold;
 }
 
 form.login input {
@@ -72,6 +72,7 @@ form.login input {
     height: 1.8em;
     transition: border 1s;
 }
+
     form.login input:hover {
         border: var(--bd-highlight);
     }
@@ -97,7 +98,6 @@ form.login button {
         cursor: pointer;
         border: var(--bd-highlight);
         opacity: 1;
-        
     }
 
     form.login button:focus {
@@ -113,7 +113,7 @@ p {
 /* Notifications */
 
 .notification {
-    margin-top:1em;
+    margin-top: 1em;
     font-family: var(--fn-attn);
 }
 
@@ -157,6 +157,18 @@ th {
     float: left;
     overflow: hidden;
 }
+
+    .dropdown.right {
+        float: right;
+    }
+
+        .dropdown.right.edge .dropdown-content {
+            right: 0;
+        }
+
+            .dropdown.right.edge .dropdown-content a {
+                text-align: right;
+            }
 
     /* Dropdown button */
     .dropdown .dropbtn {
@@ -204,4 +216,4 @@ th {
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
     display: block;
-} 
+}
