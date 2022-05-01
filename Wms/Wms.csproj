@@ -22,12 +22,8 @@
     <!-- extends watching group to include *.cshtml and *.razor files -->
     <Watch Include="**\*.cshtml;*.razor;*.js;*.css" Exclude="**\obj\**\*;bin\**\*" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <Watch Remove="Pages\Bookstore\AddBook.cshtml" />
-    <Watch Remove="Pages\Bookstore\Index.cshtml" />
-    <Watch Remove="Pages\Bookstore\Review.cshtml" />
-    <Watch Remove="Pages\School\Index.cshtml" />
     <Watch Remove="Pages\Shared\Layouts\_DarkBookstore.cshtml" />
     <Watch Remove="Pages\Shared\Layouts\_DarkLogin.cshtml" />
     <Watch Remove="Pages\Shared\Layouts\_DarkSchool.cshtml" />

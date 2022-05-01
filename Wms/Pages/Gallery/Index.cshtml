@@ -1,0 +1,26 @@
+﻿@page
+@model Wms.Pages.Gallery.IndexModel
+@{
+    Layout = "Layouts/_DarkBookstore";
+    ViewData["Title"] = "Home";
+}
+
+<partial name="/Partials/Bookstore/_MenuPartial.cshtml" />
+
+<h1 style="margin: 0 auto; text-align:center;">Gallery</h1>
+
+<div class="flexy-columns" style="margin-top:.6em;">
+    <div class="box center-content">
+        <h2>Fractals</h2>
+        <p><a href="/Gallery/Fractal">Fractal</a></p>
+        <p><a href="/Gallery/Fractal2">Fractal2</a></p>
+    </div>
+    <div class="box center-content">
+        <h2>Automata</h2>
+        <a href="#">GameOfLife</a>
+    </div>
+    <div class="box center-content">
+        <h2>??Fractals</h2>
+        <a href="#">??Fractal</a>
+    </div>
+</div>
