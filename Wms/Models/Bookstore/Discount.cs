@@ -9,8 +9,7 @@ namespace Wms.Models.Data.Bookstore
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        public string StoreId { get; set; }
-
+        public string StoreId { get; set; } = string.Empty;
 
         public int? LowQuantity { get; set; }
 

@@ -42,7 +42,7 @@ public class UserModel : PageModel
         PagedData.DataFieldList.Add(new DataField("LastName", true, 3));
     }
 
-    public async Task OnGetAsync()
+    public void OnGet()
     {
         //SetupPageDefaults();
 

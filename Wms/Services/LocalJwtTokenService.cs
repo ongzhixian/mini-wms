@@ -48,6 +48,6 @@ public class LocalJwtTokenService : IJwtTokenService
             securityToken.Claims.Map(tokenHandler.InboundClaimTypeMap),
             CookieAuthenticationDefaults.AuthenticationScheme);
 
-        return (new ClaimsPrincipal(claimsIdentity), string.Empty);
+        return await Task.FromResult((new ClaimsPrincipal(claimsIdentity), string.Empty));
     }
 }

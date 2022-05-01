@@ -6,6 +6,6 @@
         
         public string Name { get; set; } = string.Empty;
 
-        public ICollection<Feature> Features { get; set; }
+        public ICollection<Feature> Features { get; set; } = new List<Feature>();
     }
 }

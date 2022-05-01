@@ -10,6 +10,13 @@ using Wms.Services.HttpClients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using MongoDB.Driver;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Bson.Serialization;
+using Wms.Extensions;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson;
+using Wms.Models.Data.Bookstore;
 
 namespace Wms;
 
@@ -87,12 +94,11 @@ internal static class AppStartup
 
     internal static void SetupDatabaseContexts(ConfigurationManager configuration, IServiceCollection services)
     {
-        // To do something about "UseSqlite", we should not bind variable code
+        // ZxNote: To do something about "UseSqlite", we should not bind variable code
         services.AddDbContext<LocalContext>(options =>
             options.UseSqlite(ResolveSqliteDbConnectionString(configuration.GetConnectionString("LocalContext"))
         ));
 
-        // To do something about "UseSqlite", we should not bind variable code
         services.AddDbContext<BloggingContext>(options =>
             options.UseSqlite(ResolveSqliteDbConnectionString(configuration.GetConnectionString("BloggingContext"))
         ));
@@ -105,14 +111,14 @@ internal static class AppStartup
             options.UseSqlite(ResolveSqliteDbConnectionString(configuration.GetConnectionString("AgileContext"))
         ));
 
-
-
         // Code snippet for use with SqlServer
         //services.AddDbContext<SchoolContext>(
         //    options => options.UseSqlServer(
         //        configuration.GetConnectionString("SchoolContext")));
 
-        services.AddSingleton<BookstoreContext>(sp => 
+        SetupMongoDbConventions();
+
+        services.AddSingleton<BookstoreContext>(sp =>
             new BookstoreContext(configuration.GetValue<string>("mongodb:minitools:ConnectionString")));
 
         // services.AddSingleton<IMongoDatabase>(sp =>
@@ -133,6 +139,17 @@ internal static class AppStartup
         // See: https://docs.microsoft.com/en-us/aspnet/core/blazor/blazor-server-ef-core?view=aspnetcore-6.0
 
         services.AddDatabaseDeveloperPageExceptionFilter();
+    }
+
+    private static void SetupMongoDbConventions()
+    {
+        var pack = new ConventionPack
+        {
+            new WmsMongoDbConvention()
+        };
+
+        ConventionRegistry.Register("ZxMongoDbConvention", pack, t => true);
+
     }
 
     internal static void SetupHttpClient(ConfigurationManager configuration, IServiceCollection services)
@@ -235,27 +252,31 @@ internal static class AppStartup
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
         }
-            
+
         services.AddScoped<PkedService>();
-        
+
         services.AddScoped<AuthenticationEndpoint>();
         services.AddScoped<UserEndpoint>();
         services.AddScoped<UserServiceHttpClient>();
 
+        // Bookstore services
+        //services.AddScoped<BookService>();
+        services.AddSingleton<BookService>();
     }
 
-    internal static void InitializeDatabases(IServiceProvider serviceProvider)
+    internal static async Task InitializeDatabasesAsync(IServiceProvider serviceProvider)
     {
-        using (var scope = serviceProvider.CreateScope())
-        {
-            var services = scope.ServiceProvider;
+        using var scope = serviceProvider.CreateScope();
 
-            InitializeLocalContext(services);
+        var services = scope.ServiceProvider;
 
-            InitializeBloggingContext(services);
+        InitializeLocalContext(services);
 
-            InitializeSchoolContext(services);
-        }
+        InitializeBloggingContext(services);
+
+        InitializeSchoolContext(services);
+
+        await InitializeBookstoreContextAsync(services);
     }
 
     private static void InitializeSchoolContext(IServiceProvider services)
@@ -279,8 +300,16 @@ internal static class AppStartup
         var context = services.GetRequiredService<LocalContext>();
 
         context.Database.EnsureCreated();
-        
+
         LocalContextInitializer.Initialize(context);
+    }
+
+    private static async Task InitializeBookstoreContextAsync(IServiceProvider services)
+    {
+        var context = services.GetRequiredService<BookstoreContext>();
+
+        // Setup index
+        await context.SetupIndexesAsync();
     }
 
     private static string ResolveSqliteDbConnectionString(string connectionString)
@@ -291,7 +320,7 @@ internal static class AppStartup
         // Example  of relative path: "./Data/asdbFile.sqlite"
         // Examples of absolute path: "/Data/dbFile.sqlite" and "C:/Data/dbFile.sqlite"
 
-        SqliteConnectionStringBuilder builder = new SqliteConnectionStringBuilder(connectionString);
+        SqliteConnectionStringBuilder builder = new(connectionString);
 
         if (!Path.IsPathRooted(builder.DataSource))
         {
@@ -328,8 +357,8 @@ public static class HttpClientName
     public const string AuthenticationEndpoint = "HttpClients:AuthenticationEndpoint";
     public const string RefreshTokenEndpoint = "HttpClients:RefreshTokenEndpoint";
     public const string UserEndpoint = "HttpClients:UserEndpoint";
-    
-    
+
+
 }
 
 public static class RsaKeyName
@@ -339,10 +368,37 @@ public static class RsaKeyName
     public const string RecepEncryptingKey = "RsaKeys:RecepEncryptingPublicKey";
 
     // Private key
-    public const string EncryptingKey = "RsaKeys:EncryptingKey"; 
+    public const string EncryptingKey = "RsaKeys:EncryptingKey";
 }
 
 public static class SessionKeyName
 {
     public const string JWT = "JWT";
+}
+
+internal class WmsMongoDbConvention : ConventionBase, IClassMapConvention, IMemberMapConvention
+{
+    // This convention do the following:
+    // 1. Set generator and serializer for Id fields
+    //    This is the same as setting the following 2 attributes on Id field:
+    //    [BsonId]
+    //    [BsonRepresentation(BsonType.ObjectId)]
+    // 2. Set class members to be named in camel-case in MongoDb
+
+    public void Apply(BsonClassMap classMap)
+    {
+        classMap.IdMemberMap?
+            .SetIdGenerator(StringObjectIdGenerator.Instance)
+            .SetSerializer(new StringSerializer(BsonType.ObjectId));
+
+        // Note: StringObjectIdGenerator is the correct choice here because we specify the type for Id field to be string
+        // If we specify Id field to be of type ObjectId or Guid,
+        // then we should ObjectIdGenerator or GuidGenerator/CombGuidGenerator respectively
+        // See: http://mongodb.github.io/mongo-csharp-driver/2.2/reference/bson/mapping/#id-generators
+    }
+
+    public void Apply(BsonMemberMap memberMap)
+    {
+        memberMap.SetElementName(memberMap.MemberName.ToCamelCase());
+    }
 }

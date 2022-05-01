@@ -6,7 +6,7 @@ namespace Wms.Services
 {
     public class BookService
     {
-        private BookstoreContext bookstoreContext;
+        private readonly BookstoreContext bookstoreContext;
 
         public BookService(BookstoreContext bookstoreContext)
         {

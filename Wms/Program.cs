@@ -38,7 +38,7 @@ else
     //app.UseMigrationsEndPoint();
 }
 
-AppStartup.InitializeDatabases(app.Services);
+await AppStartup.InitializeDatabasesAsync(app.Services);
 
 app.UseHttpsRedirection();
 

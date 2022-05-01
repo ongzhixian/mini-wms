@@ -32,7 +32,8 @@ public class AddBookModel : PageModel
         //_context.Movie.Add(Movie);
         //await _context.SaveChangesAsync();
 
-        await bookService.CreateAsync(Book);
+        if (Book != null)
+            await bookService.CreateAsync(Book);
 
         return RedirectToPage("/Bookstore/Index");
     }
