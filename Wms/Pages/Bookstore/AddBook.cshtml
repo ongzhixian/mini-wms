@@ -1,0 +1,53 @@
+﻿@page "/Bookstore/AddBook"
+@model Wms.Pages.Bookstore.AddBookModel
+@{
+    Layout = "Layouts/_DarkBookstore";
+    ViewData["Title"] = "Add book";
+}
+
+<div class="grail">
+    <header><partial name="/Partials/Bookstore/_MenuPartial.cshtml" /></header>
+
+    <div class="left"></div>
+    
+    <main>
+        <form method="post" class="card">
+
+            <h1 style="margin: .36em auto ; text-align:center;">Add book</h1>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <fieldset>
+                <legend><label asp-for="Book.Title"></label></legend>
+                <input asp-for="Book.Title" value="The adventures of Sherlock Holmes" placeholder="Title" />
+            </fieldset>
+
+            <div class="flexy-columns" style="margin-top:.6em;">
+                <fieldset>
+                    <legend><label asp-for="Book.Author"></label></legend>
+                    <input asp-for="Book.Author" placeholder="Author" />
+                </fieldset>
+                <fieldset>
+                    <legend><label asp-for="Book.Category"></label></legend>
+                    <input asp-for="Book.Category" placeholder="Category" />
+                </fieldset>
+                <fieldset>
+                    <legend><label asp-for="Book.Price"></label></legend>
+                    <input asp-for="Book.Price" placeholder="Price" />
+                </fieldset>
+            </div>
+
+            <div style="display: flex; flex-direction: row-reverse; margin-top: .6em;">
+                <button type="submit">Add book</button>
+            </div>
+        </form>
+    </main>
+
+    <div class="right"></div>
+
+    <footer class="section coral">
+        <div class="action-bar">
+            <a asp-page="Index">Back to list</a>
+        </div>
+    </footer>
+</div>

@@ -24,7 +24,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Watch Remove="Pages\Bookstore\AddBook.cshtml" />
     <Watch Remove="Pages\Bookstore\Index.cshtml" />
+    <Watch Remove="Pages\Bookstore\Review.cshtml" />
     <Watch Remove="Pages\School\Index.cshtml" />
     <Watch Remove="Pages\Shared\Layouts\_DarkBookstore.cshtml" />
     <Watch Remove="Pages\Shared\Layouts\_DarkLogin.cshtml" />
@@ -35,4 +37,5 @@
     <Watch Remove="Partials\School\_MenuPartial.cshtml" />
     <Watch Remove="Partials\Shared\_ContextMenuPartial.cshtml" />
   </ItemGroup>
+  
 </Project>

@@ -5,12 +5,11 @@ namespace Wms.Models.Data.Bookstore
 {
     public class Book
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
+        //[BsonId]
+        //[BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("Name")]
-        public string BookName { get; set; } = null!;
+        public string Title { get; set; } = null!;
 
         public decimal Price { get; set; }
 

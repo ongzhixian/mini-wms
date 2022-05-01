@@ -217,3 +217,108 @@ th {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+.action-bar {
+    margin: 0 1em;
+}
+
+
+/* Holy Grail Layout */
+
+.grail {
+    display: grid;
+    grid-template: auto 1fr auto / auto 1fr auto;
+}
+
+    .grail > header {
+        /*padding: 2rem;*/
+        grid-column: 1 / 4;
+    }
+
+    .grail div.left {
+        grid-column: 1 / 2;
+    }
+
+    .grail > main {
+        grid-column: 2 / 3;
+    }
+
+    .grail div.right {
+        grid-column: 3 / 4;
+    }
+
+    .grail > footer {
+        grid-column: 1 / 4;
+    }
+
+
+/* Form */
+form.card {
+    padding: 1em;
+    box-shadow: 0px 0px 14px rgba(10, 10, 10, 0.6);
+    margin:1em;
+}
+
+input[type=text] {
+    font-family: var(--fn-text);
+    font-size: 1em;
+    background-color: transparent;
+    border: 0;
+    border-bottom: var(--almond) 2px solid;
+    width:100%;
+}
+
+fieldset {
+    border-color: var(--almond);
+    color: var(--dark);
+    border-style: dotted;
+    border-radius: 0.4em;
+}
+
+button {
+    font-size: 1em;
+    cursor: pointer;
+    background-color: var(--almond);
+    border-radius: 0.36em;
+    padding: 0.2em 0.67em;
+    border: 0;
+    color: var(--dark);
+}
+    button:active {
+        color: var(--dark);
+        background-color: var(--light-green);
+    }
+
+    button:hover {
+        box-shadow: inset 0 -0.5em 0 -0.35em rgb(0 0 0 / 10%);
+    }
+
+    button:focus-visible {
+        outline: none;
+        box-shadow: inset 0 -0.5em 0 -0.35em rgb(0 0 0 / 10%);
+    }
+
+    input[type=text]:focus {
+        outline:none;
+    }
+
+    .flexy-columns {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+        .flexy-columns > fieldset {
+            /*  Stretching: */
+            flex: 1 1 150px;
+            margin: 5px;
+            gap: 1rem;
+
+        }
+
+    .flexy-columns > .box {
+        /*  Stretching: */
+        flex: 1 1 150px;
+        margin: 5px;
+        gap: 1rem;
+    }
