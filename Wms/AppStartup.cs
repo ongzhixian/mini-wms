@@ -17,6 +17,7 @@ using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson;
 using Wms.Models.Data.Bookstore;
+using Wms.Helpers;
 
 namespace Wms;
 
@@ -262,6 +263,10 @@ internal static class AppStartup
         // Bookstore services
         //services.AddScoped<BookService>();
         services.AddSingleton<BookService>();
+        services.AddSingleton<CategoryService>();
+
+        var creep = configuration["creep"];
+        Creep.Initialize(creep);
     }
 
     internal static async Task InitializeDatabasesAsync(IServiceProvider serviceProvider)

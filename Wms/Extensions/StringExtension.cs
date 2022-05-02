@@ -1,4 +1,6 @@
-﻿namespace Wms.Extensions;
+﻿using Wms.Helpers;
+
+namespace Wms.Extensions;
 
 public static class StringExtensions
 {
@@ -28,5 +30,10 @@ public static class StringExtensions
         //    null => string.Empty,
         //    _ => src.Length == 1 ? Char.ToLowerInvariant(src[0]).ToString() : Char.ToLowerInvariant(src[0]) + src[1..]
         //};
+    }
+
+    public static string Obfuscate(this string src)
+    {
+        return Creep.Encrypt(src);
     }
 }
