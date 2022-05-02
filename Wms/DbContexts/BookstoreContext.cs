@@ -7,6 +7,9 @@ namespace Wms.DbContexts;
 public class BookstoreContext
 {
     public readonly IMongoCollection<Book> Books;
+
+    public readonly IMongoCollection<Category> Categories;
+
     public string DatabaseName { get; private set; }
 
     private readonly IMongoClient mongoClient;
@@ -19,6 +22,8 @@ public class BookstoreContext
         db = mongoClient.GetDatabase(DatabaseName);
 
         Books = db.GetCollection<Book>(nameof(Book).ToCamelCase());
+        Categories = db.GetCollection<Category>(nameof(Category).ToCamelCase());
+
         //this.Users = db.GetCollection<User>("Users");
         // services.AddSingleton<IMongoCollection<User>>(sp => sp.GetRequiredService<IMongoDatabase>().GetCollection<User>("user"));
         // services.AddSingleton<IMongoCollection<Bookmark>>(sp => sp.GetRequiredService<IMongoDatabase>().GetCollection<Bookmark>("bookmark"));
@@ -28,6 +33,33 @@ public class BookstoreContext
     public async Task SetupIndexesAsync()
     {
         await SetupIndexesForBookAsync();
+        await SetupIndexesForCategoryAsync();
+    }
+
+
+    public void InitializeBookstore()
+    {
+
+    }
+
+    private async Task SetupIndexesForCategoryAsync()
+    {
+        var documentCursor = await Categories.Indexes.ListAsync();
+
+        if (documentCursor != null)
+        {
+            var indexes = await documentCursor.ToListAsync();
+
+            if (indexes.Count <= 1)
+            {
+                var indexKeys = Builders<Category>.IndexKeys
+                    .Ascending(m => m.Name);
+
+                var indexOptions = new CreateIndexOptions { Unique = true };
+
+                await Categories.Indexes.CreateOneAsync(new CreateIndexModel<Category>(indexKeys, indexOptions));
+            }
+        }
     }
 
     private async Task SetupIndexesForBookAsync()

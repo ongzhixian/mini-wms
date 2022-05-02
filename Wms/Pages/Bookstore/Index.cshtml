@@ -10,6 +10,20 @@
 
 <h1 style="margin: 0 auto; text-align:center;">Books</h1>
 
+
+<form method="post" class="" style="margin: 1em;">
+
+    <fieldset>
+        <legend><label asp-for="Search"></label></legend>
+        <input asp-for="Search" value="The adventures of Sherlock Holmes" placeholder="Search criteria" />
+        <div style="display: flex; flex-direction: row-reverse; margin-top: .6em;">
+        <button type="submit">Search</button>
+    </div>
+    </fieldset>
+
+    
+</form>
+
 <table style="margin: 0 auto;">
     <thead>
         <tr>

@@ -9,6 +9,9 @@ public class IndexModel : PageModel
     private readonly ILogger<IndexModel> _logger;
     private readonly BookService bookService;
 
+    [BindProperty]
+    public string Search { get; set; }
+
     public IndexModel(ILogger<IndexModel> logger, BookService bookService)
     {
         _logger = logger;

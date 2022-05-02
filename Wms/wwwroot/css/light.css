@@ -53,8 +53,67 @@ h1, h2, h3, h4, h5, h6, label, button {
     box-shadow: 0px 0px 14px rgba(10, 10, 10, 0.6);
 }
 
-/* Forms (login) */
 
+
+.split-grid-50 {
+    display: grid;
+    grid-template-columns: minmax(150px, 50%) 1fr;
+}
+
+.dashboard {
+    /*flexy-columns */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+}
+
+    .dashboard section {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+
+        padding: 0.6em 0.8em;
+        border-color: var(--almond);
+        border-style: inset;
+        border-width: 0.3em 0 0 0.3em;
+        border-radius: 1em 0.3em 0 0.3em;
+        width: 360px;
+    }
+
+        .dashboard section h2 {
+            /*margin-top: 0;*/
+            margin:0;
+        }
+
+        .dashboard section .action-bar {
+            text-align: end;
+            /*margin-top: 1.67em;*/
+        }
+
+            .dashboard section .action-bar a {
+                text-decoration: none;
+                /*            border: 4px solid var(--almond);
+            padding: 0px 8px;
+            border-radius: 0.3em;
+*/
+            }
+
+/*            .dashboard section .action-bar a:hover {
+                border-style: outset;
+            }
+
+            .dashboard section .action-bar a:focus {
+                border-style: inset;
+                color: var(--dark);
+                background-color: var(--light-green);
+            }
+
+*/
+
+
+
+
+/* Forms (login) */
 form.login label {
     font-weight: bold;
 }
@@ -256,7 +315,7 @@ th {
 form.card {
     padding: 1em;
     box-shadow: 0px 0px 14px rgba(10, 10, 10, 0.6);
-    margin:1em;
+    margin: 1em;
 }
 
 input[type=text] {
@@ -265,7 +324,7 @@ input[type=text] {
     background-color: transparent;
     border: 0;
     border-bottom: var(--almond) 2px solid;
-    width:100%;
+    width: 100%;
 }
 
 fieldset {
@@ -275,6 +334,7 @@ fieldset {
     border-radius: 0.4em;
 }
 
+.btn,
 button {
     font-size: 1em;
     cursor: pointer;
@@ -284,37 +344,40 @@ button {
     border: 0;
     color: var(--dark);
 }
+
+    .btn:active,
     button:active {
         color: var(--dark);
         background-color: var(--light-green);
     }
 
+    .btn:hover,
     button:hover {
         box-shadow: inset 0 -0.5em 0 -0.35em rgb(0 0 0 / 10%);
     }
 
+    .btn:focus-visible,
     button:focus-visible {
         outline: none;
         box-shadow: inset 0 -0.5em 0 -0.35em rgb(0 0 0 / 10%);
     }
 
-    input[type=text]:focus {
-        outline:none;
+input[type=text]:focus {
+    outline: none;
+}
+
+.flexy-columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+    .flexy-columns > fieldset {
+        /*  Stretching: */
+        flex: 1 1 150px;
+        margin: 5px;
+        gap: 1rem;
     }
-
-    .flexy-columns {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-        .flexy-columns > fieldset {
-            /*  Stretching: */
-            flex: 1 1 150px;
-            margin: 5px;
-            gap: 1rem;
-
-        }
 
     .flexy-columns > .box {
         /*  Stretching: */
@@ -324,5 +387,5 @@ button {
     }
 
 .center-content {
-    text-align:center;
+    text-align: center;
 }

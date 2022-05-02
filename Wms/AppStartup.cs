@@ -308,8 +308,11 @@ internal static class AppStartup
     {
         var context = services.GetRequiredService<BookstoreContext>();
 
-        // Setup index
+        // Setup indexes
         await context.SetupIndexesAsync();
+
+        // Setup default data
+        context.InitializeBookstore();
     }
 
     private static string ResolveSqliteDbConnectionString(string connectionString)

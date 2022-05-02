@@ -1,0 +1,47 @@
+﻿@page
+@model Wms.Pages.Bookstore.BookManagerModel
+@{
+    Layout = "Layouts/_DarkBookstore";
+    ViewData["Title"] = "Home";
+}
+
+<partial name="/Partials/Bookstore/_MenuPartial.cshtml" />
+
+@*<h1 style="margin: 0 auto; text-align:center;">Books</h1>*@
+
+<div class="dashboard" style="margin-top:.6em;">
+    
+    <section>
+        <h2>Categories</h2>
+        <p>You have books from <a href="/Bookstore/Categories">3</a> categories.</p>
+
+        <div class="action-bar">
+            <a class="btn" href="/Bookstore/AddCategory">Add category</a>
+        </div>
+    </section>
+
+    <section>
+        <h2>Books</h2>
+        <p>You have 3 books.</p>
+
+        <div class="action-bar">
+            <a class="btn" href="/Bookstore/AddBook">Add book</a>
+        </div>
+    </section>
+
+    <section>
+        <h2>Authors</h2>
+        <p>You have books from 3 authors.</p>
+
+        <div class="action-bar">
+            <a class="btn" href="/Bookstore/AddAuthor">Add author</a>
+        </div>
+    </section>
+
+
+</div>
+
+
+
+
+

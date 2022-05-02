@@ -1,15 +1,28 @@
 ﻿@using Wms.Models
 <nav role="navigation" class="navbar">
-    <a href="#home">Home</a>
+    <a href="/Bookstore/Index">Home</a>
     <a href="#news">News</a>
     <div class="dropdown">
         <div class="dropbtn">
-            Dropdown &vellip;
+            Administration &vellip;
         </div>
         <div class="dropdown-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
+            <a href="/Bookstore/BookManager">Books</a>
+            <a href="#">Orders</a>
+            <a href="#">Invoices</a>
+            <hr />
+            <a href="#">Employees</a>
+            <a href="#">Jobs</a>
+        </div>
+    </div>
+    <div class="dropdown">
+        <div class="dropbtn">
+            Customers &vellip;
+        </div>
+        <div class="dropdown-content">
+            <a href="#">Search</a>
+            <a href="#">Shopping cart</a>
+            <a href="#">Books</a>
         </div>
     </div>
     @await Html.PartialAsync("/Partials/Shared/_ContextMenuPartial.cshtml")

@@ -1,0 +1,80 @@
+﻿@page
+@model Wms.Pages.Bookstore.CategoriesModel
+@{
+    Layout = "Layouts/_DarkBookstore";
+    ViewData["Title"] = "Categories";
+    int row = 1;
+}
+
+<partial name="/Partials/Bookstore/_MenuPartial.cshtml" />
+
+<div class="split-grid-50">
+    <div>
+        <h1 style="margin: 0 auto .5em; text-align:center;">Categories</h1>
+
+        <table style="margin: 0 auto;">
+            <thead>
+                <tr>
+                    <th style="width:2em;">&numero;</th>
+                    <th>Category name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@(row++)</td>
+                    <td>Some data1</td>
+                </tr>
+                <tr>
+                    <td>@(row++)</td>
+                    <td>Some data2</td>
+                </tr>
+                <tr>
+                    <td>@(row++)</td>
+                    <td>Some data3</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+                        <p>Some pager here</p>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+        
+    </div>
+    <div>
+        @*<h1 style="margin: 0 auto .5em; text-align:center;">Data entry</h1>*@
+
+        <form method="post" class="card">
+
+            <h1 style="margin: .36em auto ; text-align:center;">Add category</h1>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <fieldset>
+                <legend><label asp-for="CategoryName"></label></legend>
+                <input asp-for="CategoryName" placeholder="Category name" />
+            </fieldset>
+@*
+            <div class="flexy-columns" style="margin-top:.6em;">
+                <fieldset>
+                    <legend><label asp-for="Book.Author"></label></legend>
+                    <input asp-for="Book.Author" placeholder="Author" />
+                </fieldset>
+                <fieldset>
+                    <legend><label asp-for="Book.Category"></label></legend>
+                    <input asp-for="Book.Category" placeholder="Category" />
+                </fieldset>
+            </div>
+*@
+            <div style="display: flex; flex-direction: row-reverse; margin-top: .6em;">
+                <button type="submit">Add category</button>
+            </div>
+        </form>
+        
+    </div>
+</div>
+
+
