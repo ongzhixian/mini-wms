@@ -1,0 +1,1 @@
+java -jar C:\Apps\bin\plantuml.jar $args

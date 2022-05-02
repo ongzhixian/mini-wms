@@ -1,0 +1,122 @@
+@startuml
+
+!$version = "1.0"
+
+title Bookstore ERD\nversion $version
+	
+caption Bookstore ERD
+
+header
+<font color=red>Warning</font>
+Work-In-Progress.
+endheader
+
+center footer version $version (WIP)
+
+' DIAGRAM LOOK-AND-FEEL
+
+' hide members
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+skinparam entity {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+}
+
+/' ======================================================================
+    ENTITIES
+        Notation
+        1+ one or many
+
+        <&key>      primary key (OpenIconic)
+        <&minus>    nullable field (OpenIconic)
+        <&plus>     non-nullable key (OpenIconic)
+        <&tag>      foreign key (OpenIconic)
+        <&tags>     foreign key collection (OpenIconic)
+
+        <&text>     field/text  (OpenIconic)
+        <&bookmark> foreign key (OpenIconic)
+        <&list>     foreign key (OpenIconic)
+        <&info>     foreign key (OpenIconic)
+        <&infinity> foreign key (OpenIconic)        
+        <&question-mark>     foreign key (OpenIconic)
+
+        <&external-link> primary key (OpenIconic)
+        See: OpenIconic -- https://useiconic.com/open/
+
+    RELATIONS
+
+    Category
+        N/A -- reference table
+    Author
+
+    Book has
+        1+ Author
+        1+ Category
+
+====================================================================== '/
+
+' LOOKUP/REFERENCE ENTITIES
+
+entity "Category" as category {
+    <&key> id : number <<generated>>
+    --
+    <&plus> name : text
+}
+
+entity "Author" as author {
+    <&key> id : number <<generated>>
+    --
+    <&plus> name : text
+}
+
+entity "Book" as book {
+    <&key> id : number <<generated>>
+    --
+    <&plus> name : text
+    <&tags> categories : Category <<FK>>
+    <&tags> authors : Author <<FK>>
+}
+
+
+entity "Job" as job {
+    <&key> id : number <<generated>>
+    --
+}
+
+entity "Employee" as employee {
+    <&key> id : number <<generated>>
+    --
+}
+
+entity "Store" as store {
+    <&key> id : number <<generated>>
+    --
+}
+
+
+/'
+entity "Entity02" as e02 {
+    *e2_id : number <<generated>>
+    --
+    *e1_id : number <<FK>>
+    other_details : text
+}
+
+entity "Category2" as category2 {
+    *e3_id : number <<generated>>
+    --
+    e1_id : number <<FK>>
+    other_details : text
+}
+'/
+
+!include erd-relations.plantuml
+
+@enduml

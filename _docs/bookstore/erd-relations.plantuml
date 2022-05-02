@@ -1,0 +1,43 @@
+@startuml
+
+' ======================================================================
+' RELATIONS
+' Zero or One 	|o--   ' |o o|
+' Exactly One 	||--   ' || ||  
+' Zero or Many 	}o--   ' }o o{
+' One or Many 	}|--   ' }| |{
+
+' Entity01 }|..|| Entity02 ' One  or many to one (exactly)  1*..1  
+' Entity03 }o..o| Entity04 ' Zero or many to zero or one    0*..01
+' Entity05 ||--o{ Entity06 ' One          to zero or many   1..0*
+' Entity07 |o--|| Entity08 ' Zero or one  to one            01..1
+
+
+' ======================================================================
+
+/' ======================================================================
+    ENTITIES
+        Notation
+        1+ one or many
+
+    RELATIONS
+
+    Category
+        N/A -- reference table
+    Author
+
+    Book has
+        1+ Author
+        1+ Category
+
+====================================================================== '/
+
+' ONE to MANY RELATION
+book ||..|{ category
+book ||..|{ author
+
+/'
+e01 ||..o{ e02
+e01 |o..o{ e03
+'/
+@enduml
