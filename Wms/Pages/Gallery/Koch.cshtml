@@ -1,0 +1,91 @@
+﻿@page
+@model Wms.Pages.Gallery.KochModel
+@{
+    Layout = "Layouts/_DarkBookstore";
+    ViewData["Title"] = "Home";
+}
+
+<partial name="/Partials/Bookstore/_MenuPartial.cshtml" />
+
+<h1 style="margin: 0 auto; text-align:center;">Koch</h1>
+
+<div style="margin:0 auto;">
+    <canvas id="fractal" style="width: 100%"></canvas>
+</div>
+
+<a href="/Gallery/Index">Back to gallery</a>
+
+@section Scripts {
+<script>
+    "use strict";
+
+    // Based on: https://www.youtube.com/watch?v=bIfNwgUVjV8
+
+    var canvas = document.getElementById('fractal'),
+        ctx = canvas.getContext("2d"),
+        width = canvas.width = window.innerWidth,
+        height = canvas.height = window.innerHeight,
+        iterations = 4;
+
+    function koch(p0, p1, limit) {
+        var dx = p1.x - p0.x,
+            dy = p1.y - p0.y,
+            dist = Math.sqrt(dx * dx + dy * dy),
+            unit = dist / 3,
+            angle = Math.atan2(dy, dx),
+            pA = {
+                x: p0.x + dx / 3,
+                y: p0.y + dy / 3
+            },
+            pC = {
+                x: p1.x - dx / 3,
+                y: p1.y - dy / 3
+            },
+            pB = {
+                x: pA.x + Math.cos(angle - Math.PI / 3) * unit,
+                y: pA.y + Math.sin(angle - Math.PI / 3) * unit
+            };
+
+        if (limit > 0) {
+            koch(p0, pA, limit - 1);
+            koch(pA, pB, limit - 1);
+            koch(pB, pC, limit - 1);
+            koch(pC, p1, limit - 1);
+        }
+        else
+        {
+            ctx.beginPath();
+            ctx.moveTo(p0.x, p0.y);
+            ctx.lineTo(pA.x, pA.y);
+            ctx.lineTo(pB.x, pB.y);
+            ctx.lineTo(pC.x, pC.y);
+            ctx.lineTo(p1.x, p1.y);
+            ctx.stroke();
+        }
+    }
+
+    (function () {
+
+        ctx.translate(width / 2, height / 2);
+
+        var p0 = {
+            x: 0,
+            y: -321
+        },
+        p1 = {
+            x: 278,
+            y: 160
+        },
+        p2 = {
+            x: -278,
+            y: 160
+        };
+
+        koch(p0, p1, 5);
+        koch(p1, p2, 5);
+        koch(p2, p0, 5);
+
+    }());
+
+</script>
+}

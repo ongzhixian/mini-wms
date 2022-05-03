@@ -1,0 +1,67 @@
+﻿@page
+@model Wms.Pages.Gallery.SeirpinskiModel
+@{
+    Layout = "Layouts/_DarkBookstore";
+    ViewData["Title"] = "Home";
+}
+
+<partial name="/Partials/Bookstore/_MenuPartial.cshtml" />
+
+<h1 style="margin: 0 auto; text-align:center;">Seirpinski</h1>
+
+<div style="margin:0 auto;">
+    <canvas id="fractal" style="width: 100%"></canvas>
+</div>
+
+<a href="/Gallery/Index">Back to gallery</a>
+
+@section Scripts {
+<script>
+    "use strict";
+
+    // Based on: https://www.youtube.com/watch?v=bIfNwgUVjV8
+
+    var canvas = document.getElementById('fractal'),
+        ctx = canvas.getContext("2d"),
+        width = canvas.width = window.innerWidth,
+        height = canvas.height = window.innerHeight,
+        iterations = 4;
+
+    var p0 = { x: 0, y: -321 }
+        , p1 = { x: 278, y: 160 }
+        , p2 = { x: -278, y: 160 }
+
+
+    function seirpinski(p0, p1, p2, limit)
+    {
+        if (limit <= 0)
+        {
+            drawTriangle(p0, p1, p2);
+            return;
+        }
+        
+        var pA = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 }
+        , pB = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }
+        , pC = { x: (p2.x + p0.x) / 2, y: (p2.y + p0.y) / 2 };
+
+        seirpinski(p0, pA, pC, limit - 1);
+        seirpinski(pA, p1, pB, limit - 1);
+        seirpinski(pC, pB, p2, limit - 1);
+    }
+
+    function drawTriangle(p0, p1, p2)
+    {
+        ctx.moveTo(p0.x, p0.y);
+        ctx.lineTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.fill();
+    }
+
+    (function () {
+        ctx.translate(width / 2, height / 2);
+        seirpinski(p0, p1, p2, iterations);
+
+    }());
+
+</script>
+}

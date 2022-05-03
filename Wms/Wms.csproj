@@ -22,9 +22,5 @@
     <!-- extends watching group to include *.cshtml and *.razor files -->
     <Watch Include="**\*.cshtml;*.razor;*.js;*.css" Exclude="**\obj\**\*;bin\**\*" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Watch Remove="Partials\Public\_NotificationPartial.cshtml" />
-  </ItemGroup>
-  
+
 </Project>
