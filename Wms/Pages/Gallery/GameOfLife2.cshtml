@@ -1,0 +1,64 @@
+﻿@page
+@model Wms.Pages.Gallery.GameOfLife2Model
+@{
+    Layout = "Layouts/_DarkBookstore";
+    ViewData["Title"] = "Home";
+}
+
+<partial name="/Partials/Bookstore/_MenuPartial.cshtml" />
+
+<h1 style="margin: 0 auto; text-align:center;">Game of Life 2</h1>
+
+<div style="margin:0 auto; text-align:center;">
+    <canvas id="canvas" width="750" height="400" style="border:1px solid lightgrey;">
+        Your browser does not support the HTML5 canvas tag.
+    </canvas>
+</div>
+
+<a href="/Gallery/Index">Back to gallery</a>
+
+@section Scripts {
+<script>
+    const cellWidth = 10;
+    const cellHeight = 10;
+    const aliveColor = '#ff8080';
+    const deadColor = '#303030';
+
+    // World (dimension)
+    const numColumns = 240;
+    const numRows = 200;
+
+    function cell(ctx, x, y) {
+        this.ctx = ctx;
+        this.x = x;
+        this.y = y;
+        this.alive = Math.random() > 0.5;
+
+        this.draw = function() {
+            this.ctx.fillStyle = this.alive ? this.aliveColor : this.deadColor;
+            this.ctx.fillRect(this.x * cellWidth, this.y * cellHeight, cellWidth, cellHeight);
+        }
+    }
+
+    function drawWorld(ctx, gameObjects) {
+        for (let y = 0; y < numRows; y++) {
+            for (let x = 0; x < numColumns; x++) {
+                gameObjects.push(new cell(ctx, x, y));
+            }
+        }
+    }
+
+    function gameWorld() {
+        this.canvas = document.getElementById('canvas');
+        this.context = this.canvas.getContext('2d');
+        this.gameObjects = [];
+
+        drawWorld(this.context, this.gameObjects);
+        debugger;
+    }
+
+    (function () {
+        gameWorld();
+    }());
+</script>
+}
