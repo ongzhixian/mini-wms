@@ -64,22 +64,29 @@ public class BookstoreContext
 
     private async Task SetupIndexesForBookAsync()
     {
-        var documentCursor = await Books.Indexes.ListAsync();
-
-        if (documentCursor != null)
+        try
         {
-            var indexes = await documentCursor.ToListAsync();
+            var documentCursor = await Books.Indexes.ListAsync();
 
-            if (indexes.Count <= 1)
+            if (documentCursor != null)
             {
-                var indexKeys = Builders<Book>.IndexKeys
-                    .Ascending(m => m.Title)
-                    .Ascending(m => m.Author);
+                var indexes = await documentCursor.ToListAsync();
 
-                var indexOptions = new CreateIndexOptions { Unique = true };
+                if (indexes.Count <= 1)
+                {
+                    var indexKeys = Builders<Book>.IndexKeys
+                        .Ascending(m => m.Title)
+                        .Ascending(m => m.Author);
 
-                await Books.Indexes.CreateOneAsync(new CreateIndexModel<Book>(indexKeys, indexOptions));
+                    var indexOptions = new CreateIndexOptions { Unique = true };
+
+                    await Books.Indexes.CreateOneAsync(new CreateIndexModel<Book>(indexKeys, indexOptions));
+                }
             }
+        }
+        catch (TimeoutException)
+        {
+            Console.WriteLine("Timeout on SetupIndexesForBookAsync; MongoDb maybe unavailable.");
         }
     }
 }
