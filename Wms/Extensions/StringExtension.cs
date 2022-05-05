@@ -1,4 +1,6 @@
-﻿using Wms.Helpers;
+﻿using System.Security.Cryptography;
+using System.Text;
+using Wms.Helpers;
 
 namespace Wms.Extensions;
 
@@ -30,6 +32,23 @@ public static class StringExtensions
         //    null => string.Empty,
         //    _ => src.Length == 1 ? Char.ToLowerInvariant(src[0]).ToString() : Char.ToLowerInvariant(src[0]) + src[1..]
         //};
+    }
+
+    public static byte[] ToBytes(this string src)
+    {
+        return Encoding.UTF8.GetBytes(src);
+    }
+
+    public static byte[] MD5(this string src)
+    {
+        using MD5 md5 = System.Security.Cryptography.MD5.Create();
+        return md5.ComputeHash(Encoding.UTF8.GetBytes(src));
+    }
+
+    public static Guid ToGuid(this string src)
+    {
+        using MD5 md5 = System.Security.Cryptography.MD5.Create();
+        return new Guid(md5.ComputeHash(Encoding.UTF8.GetBytes(src)));
     }
 
     public static string Obfuscate(this string src)
