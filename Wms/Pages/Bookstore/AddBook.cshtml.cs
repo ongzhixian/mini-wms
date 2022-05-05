@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Wms.Models.Data.Bookstore;
+using Wms.Models.Bookstore;
 using Wms.Services;
 
 namespace Wms.Pages.Bookstore;

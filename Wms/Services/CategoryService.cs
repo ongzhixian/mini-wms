@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using Wms.DbContexts;
+using Wms.Models.Bookstore;
 using Wms.Models.Data.Bookstore;
 
 namespace Wms.Services

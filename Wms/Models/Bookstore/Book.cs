@@ -1,16 +1,13 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace Wms.Models.Data.Bookstore
+﻿namespace Wms.Models.Bookstore
 {
     public class Book
     {
         public string? Id { get; set; }
 
-        public string Title { get; set; } = null!;
+        public string Title { get; set; } = string.Empty;
 
-        public string Category { get; set; } = null!;
+        public IList<Category> Categories { get; set; } = new List<Category>();
 
-        public string Author { get; set; } = null!;
+        public IList<Author> Authors { get; set; } = new List<Author>();
     }
 }

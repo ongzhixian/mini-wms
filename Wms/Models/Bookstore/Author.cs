@@ -9,6 +9,8 @@ namespace Wms.Models.Bookstore
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
+        public string? Hash { get; set; }
+
         public string? LastName { get; set; }
 
         public string? FirstName { get; set; }
@@ -24,5 +26,6 @@ namespace Wms.Models.Bookstore
         public string? Zip { get; set; }
 
         public bool? Contract { get; set; }
+
     }
 }

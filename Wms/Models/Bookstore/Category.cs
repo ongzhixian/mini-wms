@@ -1,4 +1,4 @@
-﻿namespace Wms.Models.Data.Bookstore
+﻿namespace Wms.Models.Bookstore
 {
     public class Category
     {

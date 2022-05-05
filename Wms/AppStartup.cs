@@ -317,7 +317,7 @@ internal static class AppStartup
         await context.SetupIndexesAsync();
 
         // Setup default data
-        context.InitializeBookstore();
+        context.InitializeBookstoreAsync();
     }
 
     private static string ResolveSqliteDbConnectionString(string connectionString)
