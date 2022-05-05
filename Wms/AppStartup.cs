@@ -18,6 +18,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson;
 using Wms.Models.Data.Bookstore;
 using Wms.Helpers;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Wms;
 
@@ -120,7 +121,10 @@ internal static class AppStartup
         SetupMongoDbConventions();
 
         services.AddSingleton<BookstoreContext>(sp =>
-            new BookstoreContext(configuration.GetValue<string>("mongodb:minitools:ConnectionString")));
+            new BookstoreContext(
+                configuration.GetValue<string>("mongodb:minitools:ConnectionString"),
+                sp.GetRequiredService<IMemoryCache>()
+                ));
 
         // services.AddSingleton<IMongoDatabase>(sp =>
         // {
@@ -225,6 +229,7 @@ internal static class AppStartup
         services.AddHttpContextAccessor();
 
         services.AddDistributedMemoryCache();
+        services.AddMemoryCache();
 
         //builder.Services.AddHealthChecks()
         //    .AddCheck<SampleHealthCheck>("Sample")
