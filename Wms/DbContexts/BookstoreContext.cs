@@ -37,73 +37,62 @@ public class BookstoreContext
 
     public async Task SetupIndexesAsync()
     {
-        await SetupIndexesForCategoryAsync();
+        await Categories.SetupIndexesAsync();
+
+        var t = new Address
+        {
+            Street = "6223 Bateman St.",
+            Unit = string.Empty,
+            City = "Berkeley",
+            Region = "CA",
+            PostCode = "94705",
+            Country = "USA"
+        };
+
+        var tstring = t.ToString();
+        var tstring2 = t.ToStringX();
+
+        var aut = new Author
+        {
+            LastName = "Bennet",
+            FirstName = "Abraham",
+            Addresses = new List<Address>
+                {
+                    new Address
+                    {
+                        Street = "6223 Bateman St.",
+                        Unit = string.Empty,
+                        City = "Berkeley",
+                        Region = "CA",
+                        PostCode = "94705",
+                        Country = "USA"
+                    }
+                },
+            Contacts = new List<Contact>
+                {
+                    new Contact
+                    {
+                        ContactType = "Phone",
+                        Value = "415 658-9932"
+                    }
+                },
+
+        };
+
+        //await SetupIndexesForCategoryAsync();
         //await SetupIndexesForBookAsync();
     }
 
     public async Task InitializeBookstoreAsync()
     {
-        await SeedCategoriesAsync();
+        await Categories.SeedAsync(cache);
+        
+        //await SeedCategoriesAsync();
         await SeedAuthorsAsync();
         await SeedBooksAsync();
     }
-
-    private async Task SeedBooksAsync()
-    {
-        // title ; cat ; lname ; fname
-        var normalizedData = @"
-Secrets of Silicon Valley;computing;Dull;Ann
-Secrets of Silicon Valley;computing;Hunter;Sheryl
-The Busy Executive's Database Guide;business;Bennet;Abraham
-The Busy Executive's Database Guide;business;Green;Marjorie
-";
-        var entries = normalizedData.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
-
-        foreach (var item in entries)
-        {
-            var part = item.Split(';', StringSplitOptions.RemoveEmptyEntries);
-
-            string title = part[0];
-            string category = part[1];
-            string lastName = part[2];
-            string firstName = part[3];
-
-            // Insert Category if not exists
-            // Get Category Id
-            var filter = Builders<Category>.Filter.Eq(t => t.Name, category);
-            IFindFluent<Category, Category>? x = Categories.Find(filter);
-
-
-            // Insert Category if not exists
-            // Get Category Id
-            await InsertCategoryIfNotExistsAsync(category);
-            var a  = await GetCategoryIfExistsAsync(category);
-        }
-
-        if (await Books.CountDocumentsAsync(_ => true) > 0)
-        {
-            return;
-        }
-        // title                                    category
-        //'Secrets of Silicon Valley'               'popular_comp'
-        //427-17-2319  Dull Ann
-        //846-92-7186  Hunter Sheryl
-
-        //'The Busy Executive''s Database Guide'    'business'
-
-        // 
-        // 
-
-        //var books = new List<Book>
-        //{
-        //    new Book
-        //    {
-        //        Title = "asd", Authors = 
-        //    }
-        //};
-
-        //await Books.InsertManyAsync(books);
-    }
+    
+    // METHODS
 
     private async Task<bool> CategoryExistsAsync(string category)
     {
@@ -193,6 +182,65 @@ The Busy Executive's Database Guide;business;Green;Marjorie
         //Task<Category>? www = await x.FirstOrDefaultAsync();
     }
 
+    // SEED
+
+    private async Task SeedBooksAsync()
+    {
+        // title ; cat ; lname ; fname
+        var normalizedData = @"
+Secrets of Silicon Valley;computing;Dull;Ann
+Secrets of Silicon Valley;computing;Hunter;Sheryl
+The Busy Executive's Database Guide;business;Bennet;Abraham
+The Busy Executive's Database Guide;business;Green;Marjorie
+";
+        var entries = normalizedData.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var item in entries)
+        {
+            var part = item.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+            string title = part[0];
+            string category = part[1];
+            string lastName = part[2];
+            string firstName = part[3];
+
+            // Insert Category if not exists
+            // Get Category Id
+            var filter = Builders<Category>.Filter.Eq(t => t.Name, category);
+            IFindFluent<Category, Category>? x = Categories.Find(filter);
+
+
+            // Insert Category if not exists
+            // Get Category Id
+            await InsertCategoryIfNotExistsAsync(category);
+            var a = await GetCategoryIfExistsAsync(category);
+        }
+
+        if (await Books.CountDocumentsAsync(_ => true) > 0)
+        {
+            return;
+        }
+        // title                                    category
+        //'Secrets of Silicon Valley'               'popular_comp'
+        //427-17-2319  Dull Ann
+        //846-92-7186  Hunter Sheryl
+
+        //'The Busy Executive''s Database Guide'    'business'
+
+        // 
+        // 
+
+        //var books = new List<Book>
+        //{
+        //    new Book
+        //    {
+        //        Title = "asd", Authors = 
+        //    }
+        //};
+
+        //await Books.InsertManyAsync(books);
+    }
+
     private async Task SeedAuthorsAsync()
     {
         if (await Authors.CountDocumentsAsync(_ => true) > 0)
@@ -202,6 +250,32 @@ The Busy Executive's Database Guide;business;Green;Marjorie
 
         var authors = new List<Author>
         {
+            new Author
+            {
+                LastName = "Bennet",
+                FirstName = "Abraham",
+                Addresses = new List<Address>
+                {
+                    new Address
+                    {
+                        Street = "6223 Bateman St.",
+                        Unit = string.Empty,
+                        City = "Berkeley",
+                        Region = "CA",
+                        PostCode = "94705",
+                        Country = "USA"
+                    }
+                },
+                Contacts = new List<Contact>
+                {
+                    new Contact
+                    {
+                        ContactType = "Phone",
+                        Value = "415 658-9932"
+                    }
+                },
+                
+            }
             //                  au_id          	au_lname       	au_fname       	phone	address	city	state	zip	contract
             //new Author { Hash = "409-56-7008", LastName = "Bennet", FirstName = "Abraham", Phone = "415 658-9932", Address = "6223 Bateman St.", City = "Berkeley", State = "CA", Zip = "94705", Contract = true },
             //new Author { Hash = "213-46-8915", LastName = "Green", FirstName = "Marjorie", Phone = "415 986-7020", Address = "309 63rd St. #411", City = "Oakland", State = "CA", Zip = "94618", Contract = true },
@@ -232,44 +306,30 @@ The Busy Executive's Database Guide;business;Green;Marjorie
         await Authors.InsertManyAsync(authors);
     }
 
-    private async Task SeedCategoriesAsync()
-    {
-        if (await Categories.CountDocumentsAsync(_ => true) > 0)
-        {
-            return;
-        }
+    //private async Task SeedCategoriesAsync()
+    //{
+    //    if (await Categories.CountDocumentsAsync(_ => true) > 0)
+    //    {
+    //        return;
+    //    }
 
-        var categories = new List<Category>
-        {
-            new Category { Name = "business" },
-            new Category { Name = "psychology" },
-            new Category { Name = "traditional_cooking" },
-            new Category { Name = "modern-cooking" },
-            new Category { Name = "computing" },
-        };
+    //    var categories = new List<Category>
+    //    {
+    //        new Category { Name = "business" },
+    //        new Category { Name = "psychology" },
+    //        new Category { Name = "traditional_cooking" },
+    //        new Category { Name = "modern-cooking" },
+    //        new Category { Name = "computing" },
+    //    };
 
-        await Categories.InsertManyAsync(categories);
-    }
+    //    await Categories.InsertManyAsync(categories);
 
-    private async Task SetupIndexesForCategoryAsync()
-    {
-        var documentCursor = await Categories.Indexes.ListAsync();
+    //    //Categories.SeedAsync(cache);
+    //}
 
-        if (documentCursor != null)
-        {
-            var indexes = await documentCursor.ToListAsync();
+    // SETUP INDEXES
 
-            if (indexes.Count <= 1)
-            {
-                var indexKeys = Builders<Category>.IndexKeys
-                    .Ascending(m => m.Name);
 
-                var indexOptions = new CreateIndexOptions { Unique = true };
-
-                await Categories.Indexes.CreateOneAsync(new CreateIndexModel<Category>(indexKeys, indexOptions));
-            }
-        }
-    }
 
     //private async Task SetupIndexesForBookAsync()
     //{

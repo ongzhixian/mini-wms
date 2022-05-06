@@ -1,6 +1,6 @@
 ﻿namespace Wms.Models.Bookstore;
 
-public class Address
+public class Address : BookstoreDataObject
 {
     public string? Street { get; set; }
 
@@ -15,4 +15,16 @@ public class Address
     public string? PostCode { get; set; }
 
     public string? Country { get; set; }
+
+    //public override string Hash() => Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes($"{ContactType}{Value}")));
+
+    public string ToStringX()
+    {
+        return $"Street: {Street}, Unit: {Unit}, City: {City}, Region: {Region}, Post code: {PostCode}, Country: {Country}";
+    }
+
+    protected override void updateHash()
+    {
+        throw new NotImplementedException();
+    }
 }
