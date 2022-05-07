@@ -23,8 +23,8 @@ public class Address : BookstoreDataObject
         return $"Street: {Street}, Unit: {Unit}, City: {City}, Region: {Region}, Post code: {PostCode}, Country: {Country}";
     }
 
-    protected override void updateHash()
-    {
-        throw new NotImplementedException();
-    }
+    //protected override void updateHash()
+    //{
+    //    throw new NotImplementedException();
+    //}
 }

@@ -5,21 +5,21 @@ namespace Wms.Models.Bookstore;
 
 public abstract class BookstoreDataObject
 {
-    private string _hash = string.Empty;
+    //private string _hash = string.Empty;
 
-    public string Hash
-    {
-        get
-        {
-            return _hash;
-        }
-        protected set
-        {
-            _hash = value;
-        }
-    }
+    //public string Hash
+    //{
+    //    get
+    //    {
+    //        return _hash;
+    //    }
+    //    protected set
+    //    {
+    //        _hash = value;
+    //    }
+    //}
 
-    protected abstract void updateHash();
+    //protected abstract void updateHash();
 
     public string Base64MD5(string value)
     {
