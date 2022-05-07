@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - Bookstore</title>
     <link rel="stylesheet" href="~/css/light.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Wms.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     @RenderBody()

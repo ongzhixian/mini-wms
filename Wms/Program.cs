@@ -54,6 +54,8 @@ app.UseSession();
 
 app.MapRazorPages();
 
+RestApi.Setup(app);
+
 app.MapPost("/api/values", async (DataRequest dataRequest, IUserService userService) =>
 {
     //db.Todos.Add(todo);

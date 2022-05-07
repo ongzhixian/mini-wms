@@ -13,7 +13,7 @@
     
     <section>
         <h2>Categories</h2>
-        <p>You have books from <a href="/Bookstore/Categories">3</a> categories.</p>
+        <p>You have books from <a href="/Bookstore/Categories">@Model.CategoryCount</a> categories.</p>
 
         <div class="action-bar">
             <a class="btn" href="/Bookstore/AddCategory">Add category</a>
@@ -22,7 +22,7 @@
 
     <section>
         <h2>Books</h2>
-        <p>You have 3 books.</p>
+        <p>You have @Model.BookCount books.</p>
 
         <div class="action-bar">
             <a class="btn" href="/Bookstore/AddBook">Add book</a>
@@ -31,7 +31,7 @@
 
     <section>
         <h2>Authors</h2>
-        <p>You have books from 3 authors.</p>
+        <p>You have books from @Model.AuthorCount authors.</p>
 
         <div class="action-bar">
             <a class="btn" href="/Bookstore/AddAuthor">Add author</a>

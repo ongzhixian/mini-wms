@@ -414,7 +414,7 @@ internal class WmsMongoDbConvention : ConventionBase, IClassMapConvention, IMemb
         // When a BSON document is deserialized, the name of each element is used to look up a matching member in the class map.
         // Normally, if no matching member is found, an exception will be thrown
         // Uncomment below to apply to all classes (or alternative apply [BsonIgnoreExtraElements] attribute to specific class)
-        // classMap.SetIgnoreExtraElements(true);
+        classMap.SetIgnoreExtraElements(true);
 
         // Note: I guess the best way to think of MongoDb's _id is that it is a internal row id
         // Sometimes it might be useful to use that, but we should be better off not using it.
