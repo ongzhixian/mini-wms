@@ -12,70 +12,82 @@ internal static class RestApi
     internal static void Setup(WebApplication app)
     {
         SetupCountrySearch(app);
+        SetupAuthorSearch(app);
+    }
+
+    private static void SetupAuthorSearch(WebApplication app)
+    {
+        app.MapGet("/api/search/author", async (string? q, BookstoreContext bookstoreContext) =>
+        {
+            var filterBuilder = Builders<Author>.Filter;
+
+            var options = new FindOptions<Author>
+            {
+                Skip = 0,
+                Limit = 10,
+                Sort = Builders<Author>.Sort.Ascending(m => m.LastName)
+            };
+
+            System.Text.RegularExpressions.Regex startWith =
+                new System.Text.RegularExpressions.Regex(
+                    $"^{q}.*",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            PipelineDefinition<Author, Author> pipeline = new EmptyPipelineDefinition<Author>();
+
+            pipeline.Match(a => startWith.IsMatch($"{a.FirstName} {a.LastName}"));
+
+            var result = await bookstoreContext.Authors
+                .Aggregate()
+                .Project(m => new
+                {
+                    fullname = m.FirstName + " " + m.LastName
+                })
+                .Match(a => startWith.IsMatch(a.fullname))
+                .ToListAsync();
+            
+            return Results.Ok(
+                JsonSerializer.Serialize(
+                    result.Select(m => m.fullname)));
+
+        });
     }
 
     private static void SetupCountrySearch(WebApplication app)
     {
         app.MapGet("/api/search/country", async (string? q, BookstoreContext bookstoreContext) =>
         {
-            Console.WriteLine(q);
+            var filterBuilder = Builders<Country>.Filter;
+
+            var options = new FindOptions<Country>
+            {
+                Skip = 0,
+                Limit = 10,
+                Sort = Builders<Country>.Sort.Ascending(m => m.Name)
+            };
+
+            var rg = new BsonRegularExpression($"/.*{q}.*/i");
+
+            FilterDefinition<Country> filter;
 
             if (q == null)
             {
-                Console.WriteLine("q is null");
+                filter = filterBuilder.Empty;
             }
-
-            //var rg = new MongoDB.Bson.BsonRegularExpression()
-            var rg = new BsonRegularExpression($"/.*{q}.*/i");
-
-            FilterDefinition<Country> filter = Builders<Country>.Filter.Regex(m => m.Name, rg);
-
-            var options = new FindOptions<Country>();
-            //options.Skip
-            options.Limit = 10;
-            options.Sort = Builders<Country>.Sort.Ascending(m => m.Name);
+            else
+            {
+                filter = filterBuilder.Regex(
+                    m => m.Name, 
+                    new BsonRegularExpression($"/.*{q}.*/i"));
+            }
 
             IAsyncCursor<Country> docCursor = await bookstoreContext.Countries.FindAsync(filter, options);
 
             var result = await docCursor.ToListAsync();
-
             
             return Results.Ok(
                 JsonSerializer.Serialize(result.Select(m => m.Name))
                 );
-
-            //db.Todos.Add(todo);
-            //await db.SaveChangesAsync();
-            //return Results.Created($"/todoitems/{todo.Id}", todo);
-            //PagedDataOptions PagedData = new PagedDataOptions();
-
-            //PagedData.Page = (uint)dataRequest.Page;
-            //PagedData.PageSize = (uint)dataRequest.PageSize;
-            //PagedData.DataType = dataRequest.DataType;
-            //PagedData.DataFieldList.Add(new DataField("Username", true, 1));
-            //PagedData.DataFieldList.Add(new DataField("FirstName", true, 2));
-            //PagedData.DataFieldList.Add(new DataField("LastName", true, 3));
-
-            //try
-            //{
-            //    var result = await userService.GetAllUsersAsync(PagedData);
-
-            //    var UserList = result.Data;
-
-            //    var fieldNames = typeof(UserRecord).GetProperties(BindingFlags.Instance | BindingFlags.Public).Select(r => r.Name).ToList();
-
-            //    return Results.Ok(new DataResponse<UserRecord>
-            //    {
-            //        FieldNames = fieldNames,
-            //        Data = result.Data,
-            //        TotalRecordCount = result.TotalRecordCount
-            //    });
-            //}
-            //catch (Exception)
-            //{
-            //    throw;
-            //}
-
         });
     }
 }

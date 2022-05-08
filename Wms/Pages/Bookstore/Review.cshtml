@@ -20,6 +20,12 @@
 </div>
 
 
+<h3>Test API</h3>
+
+<div id="testapi">
+    <input class="typeahead" type="text" placeholder="some values">
+</div>
+
 @section Scripts
 {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-typeahead/2.11.0/jquery.typeahead.js"></script>
@@ -68,7 +74,7 @@ $('#the-basics .typeahead').typeahead({
 
 // Using Bloodhound
 
-var states = new Bloodhound({
+var states2 = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.whitespace,
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     // `states` is an array of state names defined in "The Basics"
@@ -81,8 +87,56 @@ $('#bloodhound .typeahead').typeahead({
     minLength: 1
 }, {
     name: 'states',
-    source: states
+    source: states2
 });
+
+// Using Test API
+
+var countriesMatcher = function(strs) {
+    return function findMatches(q, cb) {
+        var matches, substringRegex;
+
+        // an array that will be populated with substring matches
+        matches = [];
+
+        // regex used to determine if a string contains the substring `q`
+        substrRegex = new RegExp(q, 'i');
+
+        // iterate through the pool of strings and for any string that contains the substring `q`, add it to the `matches` array
+        $.each(strs, function(i, str) {
+            if (substrRegex.test(str)) {
+                matches.push(str);
+            }
+        });
+
+        cb(matches);
+    };
+};
+
+
+$('#testapi .typeahead').typeahead({
+    hint: true,
+    highlight: true,
+    minLength: 1
+}, {
+    name: 'states',
+    limit: 5,
+    async: true,
+    source: function (userInput, processSync, processAsync) {
+        //processSync(['This suggestion appears immediately', 'This one too']);
+        return $.ajax({
+            url: "/api/search/country?q=" + userInput, 
+            type: 'GET',
+            //data: {query: userInput},
+            dataType: 'json',
+            success: function (json) {
+                return processAsync(JSON.parse(json));
+            }
+        });
+    }
+});
+
+
 </script>
 
 }
