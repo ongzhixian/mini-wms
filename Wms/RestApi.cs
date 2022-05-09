@@ -37,6 +37,7 @@ internal static class RestApi
 
             pipeline.Match(a => startWith.IsMatch($"{a.FirstName} {a.LastName}"));
 
+            // Working
             var result = await bookstoreContext.Authors
                 .Aggregate()
                 .Project(m => new
@@ -45,7 +46,7 @@ internal static class RestApi
                 })
                 .Match(a => startWith.IsMatch(a.fullname))
                 .ToListAsync();
-            
+
             return Results.Ok(
                 JsonSerializer.Serialize(
                     result.Select(m => m.fullname)));

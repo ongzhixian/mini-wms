@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Wms.Models.Shared;
 
@@ -6,6 +7,25 @@ namespace Wms.Extensions;
 
 public static class MongoCollectionUserExtensions
 {
+    public static async Task<User> FindFindFirstOrDefaultAsync(this IMongoCollection<User> users, string username)
+    {
+        var filterBuilder = Builders<User>.Filter;
+
+        var filter = filterBuilder.Regex(
+            m => m.Username,
+            new BsonRegularExpression($"/.*{username}.*/i"));
+
+        var options = new FindOptions<User>
+        {
+            Limit = 10,
+            Sort = Builders<User>.Sort.Ascending(m => m.Username)
+        };
+
+        var docCursor = await users.FindAsync(filter, options);
+
+        return await docCursor.FirstOrDefaultAsync();
+    }
+
     public static async Task SetupIndexesAsync(this IMongoCollection<User> categories)
     {
         var documentCursor = await categories.Indexes.ListAsync();
@@ -35,7 +55,7 @@ public static class MongoCollectionUserExtensions
 
         List<User> seedData = new List<User>();
 
-        using (StreamReader sr = new("./Data/pubs/Users.csv"))
+        using (StreamReader sr = new("./Data/shared/users.csv"))
         {
             sr.ReadLine(); // Skip first line
 
@@ -50,60 +70,32 @@ public static class MongoCollectionUserExtensions
 
                 var fields = line.Split(',', StringSplitOptions.None);
 
-                if ((fields.Length <= 0) || (fields.Length < 9))
+                if ((fields.Length <= 0) || (fields.Length < 3))
                 {
                     continue;
                 }
 
-                // au_id,au_lname,au_fname,phone,address,city,state,zip,contract
-                const int ID = 0;
-                const int LAST_NAME = 1;
-                const int FIRST_NAME = 2;
-                const int PHONE = 3;
-                const int ADDRESS = 4;
-                const int CITY = 5;
-                const int STATE = 6;
-                const int ZIP = 7;
-                const int CONTRACT = 8;
+                // username,password,roles
+                const int USERNAME = 0;
+                const int PASSWORD = 1;
+                const int ROLES = 2;
 
-                // seedData.Add(new User
-                // {
-                //     Id = fields[ID],
-                //     FirstName = fields[FIRST_NAME],
-                //     LastName = fields[LAST_NAME],
-                //     Contract = fields[CONTRACT] == "1" ? true : false,
-                //     Contacts = new List<Contact>
-                //     {
-                //         new Contact
-                //         {
-                //             ContactType = "phone",
-                //             Value = fields[PHONE]
-                //         }
-                //     },
-                //     Addresses = new List<Address>
-                //     {
-                //         new Address
-                //         {
-                //             Street = fields[ADDRESS],
-                //             City = fields[CITY],
-                //             Region = fields[STATE],
-                //             PostCode = fields[ZIP],
-                //             Country = "USA"
-                //         }
-                //     }
-                // });
+                seedData.Add(new User
+                {
+                    Username = fields[USERNAME],
+                    Password = fields[PASSWORD],
+                    Roles = parsedRoles(fields[ROLES])
+                });
             }
         }
 
-
         await Users.InsertManyAsync(seedData);
-
-        //foreach (var item in seedData)
-        //{
-        //    // <database>.<collection>.<key>
-        //    cache.Set($"bookstore.{nameof(Category)}.{item.Name}", item);
-        //}
     }
 
-    
+    private static IList<string> parsedRoles(string roles)
+    {
+        return roles
+            .Split(';', StringSplitOptions.RemoveEmptyEntries)
+            .Select(x => x).ToList();
+    }
 }

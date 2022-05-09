@@ -7,6 +7,10 @@ namespace Wms.DbContexts;
 
 public class SharedMongoDbContext
 {
+    public readonly IMongoCollection<Models.Shared.Application> Applications;
+
+    public readonly IMongoCollection<Models.Shared.Role> Roles;
+
     public readonly IMongoCollection<Models.Shared.User> Users;
 
     public readonly IMongoCollection<Models.Shared.UserProfile> UserProfiles;
@@ -26,9 +30,13 @@ public class SharedMongoDbContext
 
         this.cache = cache;
 
+        Applications = db.GetCollection<Application>(nameof(Application).ToCamelCase());
+
+        Roles = db.GetCollection<Role>(nameof(Role).ToCamelCase());
+
         Users = db.GetCollection<User>(nameof(User).ToCamelCase());
 
-        UserProfiles = db.GetCollection<UserProfile>(nameof(UserProfile).ToCamelCase());
+        //UserProfiles = db.GetCollection<UserProfile>(nameof(UserProfile).ToCamelCase());
 
         //this.Users = db.GetCollection<User>("Users");
         // services.AddSingleton<IMongoCollection<User>>(sp => sp.GetRequiredService<IMongoDatabase>().GetCollection<User>("user"));
@@ -38,37 +46,20 @@ public class SharedMongoDbContext
 
     public async Task SetupIndexesAsync()
     {
-        throw new NotImplementedException();
-        // await Categories.SetupIndexesAsync();
+        await Applications.SetupIndexesAsync();
 
-        // await Countries.SetupIndexesAsync();
+        await Roles.SetupIndexesAsync();
 
-        // await ContactTypes.SetupIndexesAsync();
-
-        // await Authors.SetupIndexesAsync();
-
-        // await Books.SetupIndexesAsync();
+        await Users.SetupIndexesAsync();
     }
 
     public async Task SeedDataAsync()
     {
-        throw new NotImplementedException();
+        await Applications.SeedAsync(cache);
 
-        // await Categories.SeedAsync(cache);
+        await Roles.SeedAsync(cache);
 
-        // await Countries.SeedAsync(cache);
-        
-        // await ContactTypes.SeedAsync(cache);
-
-        // // Data
-
-        // await Authors.SeedAsync(cache);
-
-        // await Books.SeedAsync(cache);
-
-        //await SeedCategoriesAsync();
-        // await SeedAuthorsAsync();
-        //await SeedBooksAsync();
+        await Users.SeedAsync(cache);
     }
-    
+
 }

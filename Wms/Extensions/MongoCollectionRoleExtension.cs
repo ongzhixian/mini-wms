@@ -17,7 +17,7 @@ public static class MongoCollectionRoleExtensions
             if (indexes.Count <= 1)
             {
                 var indexKeys = Builders<Role>.IndexKeys
-                    .Ascending(m => m.Id);
+                    .Ascending(m => m.Name);
 
                 var indexOptions = new CreateIndexOptions { Unique = true };
 
@@ -35,7 +35,7 @@ public static class MongoCollectionRoleExtensions
 
         List<Role> seedData = new List<Role>();
 
-        using (StreamReader sr = new("./Data/pubs/Roles.csv"))
+        using (StreamReader sr = new("./Data/shared/roles.csv"))
         {
             sr.ReadLine(); // Skip first line
 
@@ -50,60 +50,23 @@ public static class MongoCollectionRoleExtensions
 
                 var fields = line.Split(',', StringSplitOptions.None);
 
-                if ((fields.Length <= 0) || (fields.Length < 9))
+                if ((fields.Length <= 0) || (fields.Length < 2))
                 {
                     continue;
                 }
 
-                // au_id,au_lname,au_fname,phone,address,city,state,zip,contract
-                const int ID = 0;
-                const int LAST_NAME = 1;
-                const int FIRST_NAME = 2;
-                const int PHONE = 3;
-                const int ADDRESS = 4;
-                const int CITY = 5;
-                const int STATE = 6;
-                const int ZIP = 7;
-                const int CONTRACT = 8;
+                // name,description
+                const int NAME = 0;
+                const int DESCRIPTION = 1;
 
-                // seedData.Add(new Role
-                // {
-                //     Id = fields[ID],
-                //     FirstName = fields[FIRST_NAME],
-                //     LastName = fields[LAST_NAME],
-                //     Contract = fields[CONTRACT] == "1" ? true : false,
-                //     Contacts = new List<Contact>
-                //     {
-                //         new Contact
-                //         {
-                //             ContactType = "phone",
-                //             Value = fields[PHONE]
-                //         }
-                //     },
-                //     Addresses = new List<Address>
-                //     {
-                //         new Address
-                //         {
-                //             Street = fields[ADDRESS],
-                //             City = fields[CITY],
-                //             Region = fields[STATE],
-                //             PostCode = fields[ZIP],
-                //             Country = "USA"
-                //         }
-                //     }
-                // });
+                seedData.Add(new Role
+                {
+                    Name = fields[NAME],
+                    Description = fields[DESCRIPTION],
+                });
             }
         }
 
-
         await Roles.InsertManyAsync(seedData);
-
-        //foreach (var item in seedData)
-        //{
-        //    // <database>.<collection>.<key>
-        //    cache.Set($"bookstore.{nameof(Category)}.{item.Name}", item);
-        //}
     }
-
-    
 }

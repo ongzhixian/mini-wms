@@ -8,6 +8,8 @@ using Wms.Models;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using Wms.Models.Shared;
+using MongoDB.Bson;
+using Wms.Extensions;
 
 namespace Wms.Services;
 
@@ -27,23 +29,16 @@ public class MongoDbUserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<LoginResponse> AuthenticateAsync(LoginViewModel login)
+    public async Task<LoginResponse> AuthenticateAsync(LoginViewModel login)
     {
-        //var localUser = sharedMongoDbContext.Users.Include(a => a.Roles).Where(r => r.Username == login.Username).FirstOrDefault();
-        // var filter = Builders<User>.Filter.Regex()
-        
-        User localUser = new User();
-        
-        // var localUser = sharedMongoDbContext.Users.FindAsync(_ => true)
-        //     .Where(r => r.Username == login.Username).FirstOrDefault();
-        //.Include(a => a.Roles).Where(r => r.Username == login.Username).FirstOrDefault();
+        User? localUser = await sharedMongoDbContext.Users.FindFindFirstOrDefaultAsync(login.Username);
 
         if (localUser == null)
         {
-            return Task.FromResult(new LoginResponse
+            return new LoginResponse
             {
                 Jwt = string.Empty
-            });
+            };
         }
 
         // Verify password
@@ -53,9 +48,9 @@ public class MongoDbUserService : IUserService
             var claims = new List<Claim>();
 
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-            // claims.Add(new Claim(JwtRegisteredClaimNames.Sub, localUser.Username));
-            // claims.Add(new Claim(ClaimsIdentity.DefaultNameClaimType, localUser.Username));
-            // claims.AddRange(localUser.Roles.Select(localRole => new Claim(ClaimsIdentity.DefaultRoleClaimType, localRole.Name)));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, localUser.Username));
+            claims.Add(new Claim(ClaimsIdentity.DefaultNameClaimType, localUser.Username));
+            claims.AddRange(localUser.Roles.Select(localRole => new Claim(ClaimsIdentity.DefaultRoleClaimType, localRole)));
 
             var securityTokenDescriptor = new Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor
             {
@@ -84,16 +79,16 @@ public class MongoDbUserService : IUserService
             // There is another way to map using IClaimsTransformation
             // See: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/claims?view=aspnetcore-6.0
 
-            return Task.FromResult(new LoginResponse
+            return new LoginResponse
             {
                 Jwt = tokenHandler.CreateEncodedJwt(securityTokenDescriptor)
-            }) ;
+            };
         }
 
-        return Task.FromResult(new LoginResponse
+        return new LoginResponse
         {
-            Jwt = ""
-        });
+            Jwt = string.Empty
+        };
     }
 
     public Task<IEnumerable<UserRecord>> GetAllUsersAsync()

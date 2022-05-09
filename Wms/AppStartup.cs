@@ -255,7 +255,12 @@ internal static class AppStartup
 
         });
 
-        if (configuration.GetValue<bool>("Application:UseLocal"))
+        if (configuration.GetValue<bool>("Application:UseMongoDb"))
+        {
+            services.AddScoped<IUserService, MongoDbUserService>();
+            services.AddScoped<IJwtTokenService, MongoDbJwtTokenService>();
+        }
+        else if (configuration.GetValue<bool>("Application:UseLocal"))
         {
             services.AddScoped<IUserService, LocalUserService>();
             services.AddScoped<IJwtTokenService, LocalJwtTokenService>();
