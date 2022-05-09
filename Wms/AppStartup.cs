@@ -120,6 +120,13 @@ internal static class AppStartup
 
         SetupMongoDbConventions();
 
+        services.AddSingleton<SharedMongoDbContext>(sp =>
+            new SharedMongoDbContext(
+                configuration.GetValue<string>("mongodb:minitools:ConnectionString"),
+                sp.GetRequiredService<IMemoryCache>()
+                ));
+
+
         services.AddSingleton<BookstoreContext>(sp =>
             new BookstoreContext(
                 configuration.GetValue<string>("mongodb:minitools:ConnectionString"),
