@@ -1,0 +1,5 @@
+namespace Wms.Models.Blazerstore;
+public class Size
+{
+    public string? Label { get; set; }
+}
