@@ -361,6 +361,22 @@ internal static class AppStartup
 
         return builder.ToString();
     }
+
+    internal static void SetupRequestMiddleWare(WebApplication app)
+    {
+        app.Use(async (context, next) =>
+        {
+            // Do work that can write to the Response.
+
+            // Note: Don't call next.Invoke after the response has been sent to the client.
+            // Changes to HttpResponse after the response has started throw an exception. 
+            await next.Invoke();
+            
+            // Do logging or other work that doesn't write to the Response.
+            var request = context.Request;
+            Console.WriteLine($"{request.Method} - {context.Request.Path}");
+        });
+    }
 }
 
 

@@ -25,6 +25,8 @@ AppStartup.SetupServices(builder.Configuration, builder.Services);
 
 var app = builder.Build();
 
+AppStartup.SetupRequestMiddleWare(app);
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

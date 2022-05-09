@@ -20,7 +20,7 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        var s = await bookService.GetAsync();
-        Console.WriteLine(s);
+        // var s = await bookService.GetAsync();
+        // Console.WriteLine(s);
     }
 }
