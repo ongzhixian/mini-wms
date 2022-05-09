@@ -114,6 +114,22 @@ var countriesMatcher = function(strs) {
 };
 
 
+const debounce = (func, wait) => {
+    let timeout;
+
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+};
+
+let timeout;
+
 $('#testapi .typeahead').typeahead({
     hint: true,
     highlight: true,
@@ -124,15 +140,22 @@ $('#testapi .typeahead').typeahead({
     async: true,
     source: function (userInput, processSync, processAsync) {
         //processSync(['This suggestion appears immediately', 'This one too']);
-        return $.ajax({
-            url: "/api/search/country?q=" + userInput, 
-            type: 'GET',
-            //data: {query: userInput},
-            dataType: 'json',
-            success: function (json) {
-                return processAsync(JSON.parse(json));
-            }
-        });
+
+        const later = () => {
+            clearTimeout(timeout);
+            return $.ajax({
+                url: "/api/search/country?q=" + userInput, 
+                type: 'GET',
+                //data: {query: userInput},
+                dataType: 'json',
+                success: function (json) {
+                    return processAsync(JSON.parse(json));
+                }
+            });
+        };
+
+        clearTimeout(timeout);
+        timeout = setTimeout(later, 1000);
     }
 });
 
