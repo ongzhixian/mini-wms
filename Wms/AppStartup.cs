@@ -294,6 +294,8 @@ internal static class AppStartup
         InitializeSchoolContext(services);
 
         await InitializeBookstoreContextAsync(services);
+
+        await InitializeSharedMongoDbContextAsync(services);
     }
 
     private static void InitializeSchoolContext(IServiceProvider services)
@@ -330,6 +332,17 @@ internal static class AppStartup
 
         // Setup default data
         await context.InitializeBookstoreAsync();
+    }
+
+    private static async Task InitializeSharedMongoDbContextAsync(IServiceProvider services)
+    {
+        var context = services.GetRequiredService<SharedMongoDbContext>();
+
+        // Setup indexes
+        await context.SetupIndexesAsync();
+
+        // Setup default data
+        await context.SeedDataAsync();
     }
 
     private static string ResolveSqliteDbConnectionString(string connectionString)
