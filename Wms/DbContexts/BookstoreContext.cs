@@ -9,6 +9,7 @@ public class BookstoreContext
 {
     public readonly IMongoCollection<Author> Authors;
     public readonly IMongoCollection<Category> Categories;
+    public readonly IMongoCollection<Models.Bookstore.Tag> Tags;
     public readonly IMongoCollection<Book> Books;
     public readonly IMongoCollection<Country> Countries;
     public readonly IMongoCollection<ContactType> ContactTypes;
@@ -32,6 +33,7 @@ public class BookstoreContext
         Books = db.GetCollection<Book>(nameof(Book).ToCamelCase());
         Countries = db.GetCollection<Country>(nameof(Country).ToCamelCase());
         ContactTypes = db.GetCollection<ContactType>(nameof(ContactType).ToCamelCase());
+        Tags = db.GetCollection<Models.Bookstore.Tag>(nameof(Models.Bookstore.Tag).ToCamelCase());
 
         //this.Users = db.GetCollection<User>("Users");
         // services.AddSingleton<IMongoCollection<User>>(sp => sp.GetRequiredService<IMongoDatabase>().GetCollection<User>("user"));
