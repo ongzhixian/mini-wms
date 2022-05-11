@@ -255,21 +255,44 @@ internal static class AppStartup
 
         });
 
-        if (configuration.GetValue<bool>("Application:UseMongoDb"))
+        const string RECEP_USERSERVICE_MODEL  = "RECEP";
+        const string SQLITE_USERSERVICE_MODEL = "SQLITE";
+        const string ATLAS_USERSERVICE_MODEL  = "ATLAS"; // MongoDb
+
+        switch (configuration.GetValue<string>("Application:UserServiceModel").ToUpperInvariant())
         {
-            services.AddScoped<IUserService, MongoDbUserService>();
-            services.AddScoped<IJwtTokenService, MongoDbJwtTokenService>();
+            case SQLITE_USERSERVICE_MODEL:
+                services.AddScoped<IUserService, LocalUserService>();
+                services.AddScoped<IJwtTokenService, LocalJwtTokenService>();
+                break;
+            
+            case ATLAS_USERSERVICE_MODEL:
+                services.AddScoped<IUserService, MongoDbUserService>();
+                services.AddScoped<IJwtTokenService, MongoDbJwtTokenService>();
+                break;
+
+            case RECEP_USERSERVICE_MODEL:
+            default:
+                services.AddScoped<IUserService, UserService>();
+                services.AddScoped<IJwtTokenService, JwtTokenService>();
+                break;
         }
-        else if (configuration.GetValue<bool>("Application:UseLocal"))
-        {
-            services.AddScoped<IUserService, LocalUserService>();
-            services.AddScoped<IJwtTokenService, LocalJwtTokenService>();
-        }
-        else
-        {
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IJwtTokenService, JwtTokenService>();
-        }
+
+        // if (configuration.GetValue<bool>("Application:UseMongoDb"))
+        // {
+        //     services.AddScoped<IUserService, MongoDbUserService>();
+        //     services.AddScoped<IJwtTokenService, MongoDbJwtTokenService>();
+        // }
+        // else if (configuration.GetValue<bool>("Application:UseLocal"))
+        // {
+        //     services.AddScoped<IUserService, LocalUserService>();
+        //     services.AddScoped<IJwtTokenService, LocalJwtTokenService>();
+        // }
+        // else
+        // {
+        //     services.AddScoped<IUserService, UserService>();
+        //     services.AddScoped<IJwtTokenService, JwtTokenService>();
+        // }
 
         services.AddScoped<PkedService>();
 
