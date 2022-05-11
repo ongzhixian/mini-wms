@@ -79,7 +79,7 @@ public class LoginModel : PageModel
         {
             HttpContext.Session.SetString(SessionKeyName.JWT, newJwt);
 
-            var userProfile = userProfileService.GetUserProfileAsync(claimsPrincipal.Identity?.Name);
+            var userProfile = await userProfileService.GetUserProfileAsync(claimsPrincipal.Identity?.Name);
 
             AuthenticationProperties authenticationProperties = new()
             {
@@ -97,8 +97,6 @@ public class LoginModel : PageModel
 
     private string GetRedirectUri(Models.Shared.UserProfile userProfile)
     {
-        //return Request.Query["ReturnUrl"].Count == 0 ? "/" : Request.Query["ReturnUrl"].ToString();
-
         if (Request.Query["ReturnUrl"].Count > 0)
         {
             return Request.Query["ReturnUrl"].ToString();

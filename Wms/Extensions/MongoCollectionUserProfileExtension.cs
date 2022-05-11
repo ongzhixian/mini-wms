@@ -6,25 +6,25 @@ namespace Wms.Extensions;
 
 public static class MongoCollectionUserProfileProfileExtension
 {
-    public static async Task SetupIndexesAsync(this IMongoCollection<UserProfile> userProfiles)
-    {
-        var documentCursor = await userProfiles.Indexes.ListAsync();
+    //public static async Task SetupIndexesAsync(this IMongoCollection<UserProfile> userProfiles)
+    //{
+    //    var documentCursor = await userProfiles.Indexes.ListAsync();
 
-        if (documentCursor != null)
-        {
-            var indexes = await documentCursor.ToListAsync();
+    //    if (documentCursor != null)
+    //    {
+    //        var indexes = await documentCursor.ToListAsync();
 
-            if (indexes.Count <= 1)
-            {
-                var indexKeys = Builders<UserProfile>.IndexKeys
-                    .Ascending(m => m.Id);
+    //        if (indexes.Count <= 1)
+    //        {
+    //            var indexKeys = Builders<UserProfile>.IndexKeys
+    //                .Ascending(m => m.Id);
 
-                var indexOptions = new CreateIndexOptions { Unique = true };
+    //            var indexOptions = new CreateIndexOptions { Unique = true };
 
-                await userProfiles.Indexes.CreateOneAsync(new CreateIndexModel<UserProfile>(indexKeys, indexOptions));
-            }
-        }
-    }
+    //            await userProfiles.Indexes.CreateOneAsync(new CreateIndexModel<UserProfile>(indexKeys, indexOptions));
+    //        }
+    //    }
+    //}
 
     public static async Task SeedAsync(this IMongoCollection<UserProfile> UserProfiles, IMemoryCache cache)
     {
