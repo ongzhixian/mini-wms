@@ -70,7 +70,7 @@ public static class MongoCollectionUserExtensions
 
                 var fields = line.Split(',', StringSplitOptions.None);
 
-                if ((fields.Length <= 0) || (fields.Length < 3))
+                if ((fields.Length <= 0) || (fields.Length < 4))
                 {
                     continue;
                 }
@@ -79,12 +79,14 @@ public static class MongoCollectionUserExtensions
                 const int USERNAME = 0;
                 const int PASSWORD = 1;
                 const int ROLES = 2;
+                const int PREFERREDAPPLICATION = 3;
 
                 seedData.Add(new User
                 {
                     Username = fields[USERNAME],
                     Password = fields[PASSWORD],
-                    Roles = parsedRoles(fields[ROLES])
+                    Roles = parsedRoles(fields[ROLES]),
+                    PreferredApplication = fields[PREFERREDAPPLICATION],
                 });
             }
         }

@@ -22,11 +22,14 @@ public class LoginModel : PageModel
 
     private readonly IJwtTokenService jwtTokenService;
 
-    public LoginModel(ILogger<LoginModel> logger, IUserService userService, IJwtTokenService jwtTokenService)
+    private readonly IUserProfileService userProfileService;
+
+    public LoginModel(ILogger<LoginModel> logger, IUserService userService, IJwtTokenService jwtTokenService, IUserProfileService userProfileService)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.userService = userService ?? throw new ArgumentNullException(nameof(userService));
         this.jwtTokenService = jwtTokenService ?? throw new ArgumentNullException(nameof(jwtTokenService));
+        this.userProfileService = userProfileService ?? throw new ArgumentNullException(nameof(userProfileService));
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -76,9 +79,11 @@ public class LoginModel : PageModel
         {
             HttpContext.Session.SetString(SessionKeyName.JWT, newJwt);
 
+            var userProfile = userProfileService.GetUserProfileAsync(claimsPrincipal.Identity?.Name);
+
             AuthenticationProperties authenticationProperties = new()
             {
-                RedirectUri = Request.Query["ReturnUrl"].Count == 0 ? "/" : Request.Query["ReturnUrl"].ToString()
+                RedirectUri = GetRedirectUri(userProfile)
             };
 
             return SignIn(claimsPrincipal, authenticationProperties,
@@ -88,5 +93,25 @@ public class LoginModel : PageModel
         ViewData["Notification"] = new BadRequestNotification("Invalid credentials.");
 
         return Page();
+    }
+
+    private string GetRedirectUri(Models.Shared.UserProfile userProfile)
+    {
+        //return Request.Query["ReturnUrl"].Count == 0 ? "/" : Request.Query["ReturnUrl"].ToString();
+
+        if (Request.Query["ReturnUrl"].Count > 0)
+        {
+            return Request.Query["ReturnUrl"].ToString();
+        }
+
+        // If no ReturnUrl, we use userProfile.PreferredApplication if available else default to root
+        if (string.IsNullOrWhiteSpace(userProfile.PreferredApplication))
+        {
+            return "/";
+        }
+        else
+        {
+            return userProfile.PreferredApplication;
+        }
     }
 }

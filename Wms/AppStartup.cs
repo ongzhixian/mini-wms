@@ -264,17 +264,20 @@ internal static class AppStartup
             case SQLITE_USERSERVICE_MODEL:
                 services.AddScoped<IUserService, LocalUserService>();
                 services.AddScoped<IJwtTokenService, LocalJwtTokenService>();
+                services.AddScoped<IUserProfileService, UserProfileService>(); // To implement for Local
                 break;
             
             case ATLAS_USERSERVICE_MODEL:
                 services.AddScoped<IUserService, MongoDbUserService>();
                 services.AddScoped<IJwtTokenService, MongoDbJwtTokenService>();
+                services.AddScoped<IUserProfileService, MongoDbUserProfileService>();
                 break;
 
             case RECEP_USERSERVICE_MODEL:
             default:
                 services.AddScoped<IUserService, UserService>();
                 services.AddScoped<IJwtTokenService, JwtTokenService>();
+                services.AddScoped<IUserProfileService, UserProfileService>();
                 break;
         }
 

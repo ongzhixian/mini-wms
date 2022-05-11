@@ -50,7 +50,7 @@ public static class MongoCollectionApplicationExtensions
 
                 var fields = line.Split(',', StringSplitOptions.None);
 
-                if ((fields.Length <= 0) || (fields.Length < 2))
+                if ((fields.Length <= 0) || (fields.Length < 3))
                 {
                     continue;
                 }
@@ -58,11 +58,13 @@ public static class MongoCollectionApplicationExtensions
                 // au_id,au_lname,au_fname,phone,address,city,state,zip,contract
                 const int NAME = 0;
                 const int DESCRIPTION = 1;
+                const int URL = 2;
 
                 seedData.Add(new Application
                 {
                     Name = fields[NAME],
                     Description = fields[DESCRIPTION],
+                    Url = fields[URL],
                 });
             }
         }

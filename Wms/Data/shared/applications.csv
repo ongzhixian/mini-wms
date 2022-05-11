@@ -1,5 +1,6 @@
-name,description
-application-administrator,Application administrator
-application-user,Application user
-blazerstore-administrator,Blazer store administrator
-blazerstore-user,Blazer store user
+name,description,url
+bookstore,Book store,/bookstore
+blazerstore,Blazer store,/blazerstore
+school,School,/school
+wms,WMS,/
+agile,Agile,/agile
