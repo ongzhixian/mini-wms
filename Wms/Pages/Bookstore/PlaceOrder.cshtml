@@ -1,0 +1,22 @@
+﻿@page
+@model Wms.Pages.Bookstore.PlaceOrderModel
+@{
+    Layout = "Layouts/_DarkBookstore";
+    ViewData["Title"] = "Home";
+}
+
+<partial name="/Partials/Bookstore/_MenuPartial.cshtml" />
+
+<h1 style="margin: 0 auto; text-align:center;">Place order</h1>
+
+<form method="post" class="" style="margin: 1em;" autocomplete="off">
+
+    <fieldset>
+        <legend><label asp-for="OrderMessage"></label></legend>
+        <input asp-for="OrderMessage" value="" placeholder="Order message" />
+        <div style="display: flex; flex-direction: row-reverse; margin-top: .6em;">
+        <button type="submit">Place order</button>
+    </div>
+    </fieldset>
+
+</form>

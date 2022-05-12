@@ -23,6 +23,8 @@ AppStartup.SetupHttpClient(builder.Configuration, builder.Services);
 
 AppStartup.SetupServices(builder.Configuration, builder.Services);
 
+AppStartup.SetupOptions(builder.Configuration, builder.Services);
+
 var app = builder.Build();
 
 AppStartup.SetupRequestMiddleWare(app);

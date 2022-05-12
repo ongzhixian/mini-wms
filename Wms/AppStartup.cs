@@ -19,6 +19,7 @@ using MongoDB.Bson;
 using Wms.Models.Data.Bookstore;
 using Wms.Helpers;
 using Microsoft.Extensions.Caching.Memory;
+using Wms.Models.Shared;
 
 namespace Wms;
 
@@ -428,6 +429,14 @@ internal static class AppStartup
             Console.WriteLine($"{request.Method} - {context.Request.Path}");
         });
     }
+
+    internal static void SetupOptions(ConfigurationManager configuration, IServiceCollection services)
+    {
+        services.Configure<RabbitMqOptions>(a =>
+        {
+            a.Url = configuration.GetValue<string>(RabbitMqKeys.LittleLemurUrl);
+        });
+    }
 }
 
 
@@ -437,7 +446,6 @@ public static class HttpClientName
     public const string AuthenticationEndpoint = "HttpClients:AuthenticationEndpoint";
     public const string RefreshTokenEndpoint = "HttpClients:RefreshTokenEndpoint";
     public const string UserEndpoint = "HttpClients:UserEndpoint";
-
 
 }
 
@@ -454,6 +462,11 @@ public static class RsaKeyName
 public static class SessionKeyName
 {
     public const string JWT = "JWT";
+}
+
+public static class RabbitMqKeys
+{
+    public const string LittleLemurUrl = "rabbitmq:lemur:Url";
 }
 
 internal class WmsMongoDbConvention : ConventionBase, IClassMapConvention, IMemberMapConvention
