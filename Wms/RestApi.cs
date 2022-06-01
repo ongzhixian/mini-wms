@@ -13,6 +13,16 @@ internal static class RestApi
     {
         SetupCountrySearch(app);
         SetupAuthorSearch(app);
+        SetupDanaBot(app);
+    }
+
+    private static void SetupDanaBot(WebApplication app)
+    {
+        app.MapPost("/api/danaUpdate", (Models.Telegram.Update updates) =>
+        {
+            Console.WriteLine("updates, {0}", updates); 
+            return Results.Ok();
+        });
     }
 
     private static void SetupAuthorSearch(WebApplication app)
@@ -91,4 +101,6 @@ internal static class RestApi
                 );
         });
     }
+
+
 }
