@@ -13,6 +13,7 @@ internal static class RestApi
     internal static void Setup(WebApplication app)
     {
         SetupCountrySearch(app);
+
         SetupAuthorSearch(app);
         SetupDanaBot(app);
     }
@@ -23,11 +24,11 @@ internal static class RestApi
         {
             Console.WriteLine("updates, {0}", context);
 
-            using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
-            {
-                sw.AutoFlush = true;
-                sw.WriteLine("Received some message");
-            }
+            //using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
+            //{
+            //    sw.AutoFlush = true;
+            //    sw.WriteLine("Received some message");
+            //}
         });
     }
 
