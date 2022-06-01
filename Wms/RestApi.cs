@@ -20,8 +20,7 @@ internal static class RestApi
     {
         app.MapPost("/api/danaUpdate", (Models.Telegram.Update updates) =>
         {
-            Console.WriteLine("updates, {0}", updates); 
-            return Results.Ok();
+            Console.WriteLine("updates, {0}", updates);
         });
     }
 
