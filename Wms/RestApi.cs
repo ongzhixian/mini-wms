@@ -20,15 +20,15 @@ internal static class RestApi
 
     private static void SetupDanaBot(WebApplication app)
     {
-        app.MapPost("/api/danaUpdate", [AllowAnonymous] (HttpContext context) =>
+        app.MapPost("/api/danaUpdate", [AllowAnonymous] (Wms.Models.Telegram.Update update) =>
         {
-            Console.WriteLine("updates, {0}", context);
+            Console.WriteLine("updates, {0}", update);
 
-            //using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
-            //{
-            //    sw.AutoFlush = true;
-            //    sw.WriteLine("Received some message");
-            //}
+            using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
+            {
+                sw.AutoFlush = true;
+                sw.WriteLine("Received some update {0}", update);
+            }
         });
     }
 
