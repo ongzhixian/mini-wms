@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Authorization;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Text.Json;
 using Wms.DbContexts;
@@ -18,9 +19,9 @@ internal static class RestApi
 
     private static void SetupDanaBot(WebApplication app)
     {
-        app.MapPost("/api/danaUpdate", (Models.Telegram.Update updates) =>
+        app.MapPost("/api/danaUpdate", [AllowAnonymous] (HttpContext context) =>
         {
-            Console.WriteLine("updates, {0}", updates);
+            Console.WriteLine("updates, {0}", context);
 
             using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
             {
