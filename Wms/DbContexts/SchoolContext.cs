@@ -26,8 +26,16 @@ public class SchoolContext : DbContext
     {
         modelBuilder.Entity<Course>().ToTable("Course");
 
-        modelBuilder.Entity<Enrollment>().ToTable("Enrollment");
+        modelBuilder.Entity<Course>()
+            .Navigation(b => b.Enrollments)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
 
         modelBuilder.Entity<Student>().ToTable("Student");
+
+        modelBuilder.Entity<Student>()
+            .Navigation(b => b.Enrollments)
+            .UsePropertyAccessMode(PropertyAccessMode.Property);
+
+        modelBuilder.Entity<Enrollment>().ToTable("Enrollment");
     }
 }

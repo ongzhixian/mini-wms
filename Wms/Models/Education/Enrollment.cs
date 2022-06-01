@@ -9,12 +9,12 @@ namespace Wms.Models.Data.Education
         public int CourseID { get; set; }
         
         public int StudentID { get; set; }
+
         [DisplayFormat(NullDisplayText = "No grade")]
-        
         public Grade? Grade { get; set; }
 
-        public Course Course { get; set; } = new Course();
+        //public Course Course { get; set; } = new Course();
         
-        public Student Student { get; set; } = new Student();
+        //public Student Student { get; set; } = new Student();
     }
 }
