@@ -21,6 +21,12 @@ internal static class RestApi
         app.MapPost("/api/danaUpdate", (Models.Telegram.Update updates) =>
         {
             Console.WriteLine("updates, {0}", updates);
+
+            using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
+            {
+                sw.AutoFlush = true;
+                sw.WriteLine("Received some message");
+            }
         });
     }
 
