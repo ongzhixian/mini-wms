@@ -12,4 +12,7 @@ dotnet add .\Wms\ package Microsoft.Extensions.Caching.Memory
 
 dotnet add .\Wms\ package MongoDB.Driver
 
+dotnet add .\Wms\ package NLog
+dotnet add .\Wms\ package NLog.Extensions.Logging
+
 dotnet add .\Wms\ package Microsoft.EntityFrameworkCore.Cosmos
