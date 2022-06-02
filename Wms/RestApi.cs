@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using NLog;
 using System.Text.Json;
 using Wms.DbContexts;
 using Wms.Models;
@@ -10,25 +12,66 @@ namespace Wms;
 
 internal static class RestApi
 {
+    private static Logger log = LogManager.GetCurrentClassLogger();
+
     internal static void Setup(WebApplication app)
     {
         SetupCountrySearch(app);
 
         SetupAuthorSearch(app);
+
         SetupDanaBot(app);
     }
 
     private static void SetupDanaBot(WebApplication app)
     {
-        app.MapPost("/api/danaUpdate", [AllowAnonymous] (Wms.Models.Telegram.Update update) =>
-        {
-            Console.WriteLine("updates, {0}", update);
+        //app.MapPost("/api/danaUpdate", [AllowAnonymous] ([FromBody]string content) =>
+        //{
+        //    //using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
+        //    //{
+        //    //    sw.AutoFlush = true;
+        //    //    sw.WriteLine("Received some update {0}", content);
+        //    //}
+        //});
 
-            using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
+        //app.MapPost("/api/danaUpdate", [AllowAnonymous] (Wms.Models.Telegram.Update update) =>
+        //{
+        //    using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
+        //    {
+        //        sw.AutoFlush = true;
+        //        sw.WriteLine("Received some update {0}", update);
+        //    }
+        //});
+
+        app.MapPost("/api/danaUpdate", [AllowAnonymous] async (HttpContext ctx) =>
+        {
+            string requestBody;
+
+            using (StreamReader sr = new StreamReader(ctx.Request.Body))
             {
-                sw.AutoFlush = true;
-                sw.WriteLine("Received some update {0}", update);
+                requestBody = await sr.ReadToEndAsync();
             }
+
+            log.Info(requestBody);
+
+            //using (StreamWriter sw = new StreamWriter("C:/home/LogFiles/sample.txt", true))
+            //{
+            //    sw.AutoFlush = true;
+            //    sw.WriteLine("Received some update {0}", update);
+            //}
+        });
+
+        app.MapPost("/api/dump-request-body", [AllowAnonymous] async (HttpContext ctx) =>
+        {
+            string requestBody;
+
+            using (StreamReader sr = new StreamReader(ctx.Request.Body))
+            {
+                requestBody = await sr.ReadToEndAsync();
+            }
+
+            log.Info(requestBody);
+
         });
     }
 

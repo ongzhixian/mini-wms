@@ -34,7 +34,7 @@ internal static class AppStartup
         {
             NLog.GlobalDiagnosticsContext.Set("LogDirectory", logDirectory);
         }
-        
+
         logging.AddNLog();
     }
 
