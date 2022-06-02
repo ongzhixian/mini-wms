@@ -1,5 +1,6 @@
 using Mini.Common.Models;
 using Mini.Wms.DomainMessages;
+using NLog;
 using System.Reflection;
 using Wms;
 using Wms.DbContexts;
@@ -7,7 +8,10 @@ using Wms.Models;
 using Wms.Models.Data.Blogging;
 using Wms.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+AppStartup.SetupLogging(builder.Configuration, builder.Logging);
 
 AppStartup.SetupAntiForgery(builder.Services);
 
@@ -160,4 +164,22 @@ var res1 = System.Text.Json.JsonSerializer.Deserialize<PagedData<UserRecord>>(t)
     //    db.SaveChanges();
 //}
 
-app.Run();
+var log = LogManager.GetCurrentClassLogger();
+
+try
+{
+    log.Info("Starting to run application.");
+    app.Run();
+}
+catch (Exception ex)
+{
+    log.Error(ex, "Stopped program because of exception");
+    throw;
+}
+finally
+{
+    LogManager.Shutdown();
+}
+
+
+

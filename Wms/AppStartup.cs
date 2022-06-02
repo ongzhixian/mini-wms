@@ -20,11 +20,24 @@ using Wms.Models.Data.Bookstore;
 using Wms.Helpers;
 using Microsoft.Extensions.Caching.Memory;
 using Wms.Models.Shared;
+using NLog.Extensions.Logging;
 
 namespace Wms;
 
 internal static class AppStartup
 {
+    internal static void SetupLogging(ConfigurationManager configuration, ILoggingBuilder logging)
+    {
+        string logDirectory = configuration.GetValue<string>("LogDirectory");
+
+        if (!string.IsNullOrWhiteSpace(logDirectory))
+        {
+            NLog.GlobalDiagnosticsContext.Set("LogDirectory", logDirectory);
+        }
+        
+        logging.AddNLog();
+    }
+
     internal static void SetupAntiForgery(IServiceCollection services)
     {
         services.AddAntiforgery(opts => opts.Cookie.Name = "02884936-6647-410e-a1f8-1ec2be501c36");
